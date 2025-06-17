@@ -92,9 +92,13 @@
             <div id="pix-content">
                 <p class="text-sm text-gray-400 mb-4">Um QR Code será gerado após a confirmação. Por ser uma demonstração, o QR Code é fictício.</p>
                 <div class="bg-white p-4 rounded-md flex justify-center">
-                    <img src="C:\Users\G\Desktop\SUDFANTASY\images\Upix.jpg" alt="QR Code PIX Fictício" class="rounded-md">
+                    <!-- 
+                        IMAGEM CORRIGIDA:
+                        O caminho agora é relativo. Crie uma pasta "images" ao lado do seu "pagamento.html" e coloque seu arquivo "Upix.jpg" dentro dela.
+                    -->
+                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-48 h-48" onerror="this.onerror=null;this.src='https://placehold.co/200x200/ffffff/000000?text=QR+Code+PIX';">
                 </div>
-                <input type="text" readonly value="chave-pix-copia-e-cola-ficticia-1234..." class="form-input w-full p-2 rounded-md mt-4 text-xs">
+                <input type="text" readonly value="sua-chave-pix-aqui" class="form-input w-full p-2 rounded-md mt-4 text-xs text-center">
                 <button class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave PIX</button>
             </div>
 
@@ -128,14 +132,14 @@
 
     <script>
         // --- CONFIGURAÇÃO ---
-        // COLE AQUI A URL DO SEU APP DA WEB GERADA NO GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz3Bc0A2vQxDN5lQjUGwvwsOb5v-9BY7sv988Whg7LGDAPJwQBJB6aVZfr2JKhdrC7hdA/exec'; 
 
-        // Detalhes dos ingressos
+        // --- PREÇOS CORRIGIDOS ---
+        // Altere os valores de 'price' aqui para definir os novos preços.
         const ticketTypes = {
-            'lote2': { name: '2º Lote', price: 100 },
-            'vip': { name: 'Ingresso VIP', price: 150 },
-            'default': { name: 'Ingresso Padrão', price: 100 }
+            'lote2': { name: '2º Lote', price: 1 },   // Exemplo: alterado para 120
+            'vip': { name: 'Ingresso VIP', price: 1 }, // Exemplo: alterado para 180
+            'default': { name: 'Ingresso Padrão', price: 1 }
         };
 
         // --- ELEMENTOS DO DOM ---
@@ -158,14 +162,12 @@
 
         // --- FUNÇÕES ---
 
-        // Atualiza o preço total baseado na quantidade
         function updatePrice() {
             const quantity = parseInt(quantityInput.value) || 0;
             const total = quantity * currentTicket.price;
             totalPriceEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // Troca entre as abas de pagamento
         function switchTab(tabToShow) {
             if (tabToShow === 'pix') {
                 pixTab.classList.replace('tab-inactive', 'tab-active');
@@ -180,7 +182,6 @@
             }
         }
 
-        // Envia os dados para a Planilha Google
         async function sendDataToSheet(data) {
             if (WEB_APP_URL === 'SUA_URL_AQUI') {
                 alert('ERRO: Por favor, configure a URL do Google Apps Script na variável WEB_APP_URL no código Javascript.');
@@ -203,7 +204,6 @@
         
         // --- LÓGICA PRINCIPAL ---
 
-        // Ao carregar a página, lê o tipo de ingresso da URL
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const ticketKey = params.get('tipo') || 'default';
@@ -213,7 +213,6 @@
             updatePrice();
         });
 
-        // Manipulador do formulário
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!form.checkValidity()) {
@@ -246,7 +245,6 @@
             }
         });
 
-        // Event Listeners para UI
         quantityInput.addEventListener('input', updatePrice);
         pixTab.addEventListener('click', () => switchTab('pix'));
         cardTab.addEventListener('click', () => switchTab('card'));
