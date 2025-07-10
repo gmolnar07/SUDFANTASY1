@@ -3,76 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento - Sud Fantasy</title>
+    <title>Pagamento - Halloween</title>
     
     <!-- Tailwind CSS & Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .neon-glow { text-shadow: 0 0 5px rgba(168, 85, 247, 0.5), 0 0 10px rgba(168, 85, 247, 0.4); }
+        .font-creepster { font-family: 'Creepster', cursive; }
+        .font-lato { font-family: 'Lato', sans-serif; }
+        body { 
+            font-family: 'Lato', sans-serif;
+            background-color: #0c0a09; /* Cor de fundo mais escura */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ea580c' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
         .form-input {
             background-color: #1f2937;
             border: 1px solid #4b5563;
+            transition: all 0.3s ease;
         }
         .form-input:focus {
             outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
-        }
-        .tab-active {
-            background-color: #6d28d9;
-            color: white;
-        }
-        .tab-inactive {
+            border-color: #f97316; /* orange-500 */
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.4);
             background-color: #374151;
-            color: #d1d5db;
+        }
+        .card {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        /* Animação de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="bg-stone-900 text-white flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+    <div class="w-full max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 animate-fade-in">
         
         <!-- Coluna do Formulário -->
-        <div id="form-section">
-            <h1 class="text-3xl md:text-4xl font-black uppercase bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-violet-500 to-cyan-400 neon-glow mb-2">
-                Sud Fantasy
+        <div id="form-section" class="card p-6 sm:p-8 rounded-xl">
+            <h1 class="font-creepster text-4xl md:text-5xl text-orange-500 uppercase tracking-wider text-shadow-orange mb-2">
+                Halloween
             </h1>
-            <h2 class="text-xl font-bold text-gray-300 mb-6">Finalize sua Compra</h2>
+            <h2 class="text-xl font-bold text-gray-300 mb-6">Finalize sua Passagem</h2>
 
             <form id="payment-form" novalidate>
-                <!-- Detalhes Pessoais -->
                 <div class="space-y-4">
                     <div>
-                        <label for="nome" class="block text-sm font-medium text-gray-300 mb-1">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" class="form-input w-full p-2 rounded-md" required>
+                        <label for="nome" class="block text-sm font-medium text-gray-300 mb-1">Nome do Viajante</label>
+                        <input type="text" id="nome" name="nome" class="form-input w-full p-3 rounded-md" required>
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">E-mail</label>
-                        <input type="email" id="email" name="email" class="form-input w-full p-2 rounded-md" required>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">E-mail de Contato</label>
+                        <input type="email" id="email" name="email" class="form-input w-full p-3 rounded-md" required>
                     </div>
                     <div>
-                        <label for="cpf" class="block text-sm font-medium text-gray-300 mb-1">CPF</label>
-                        <input type="text" id="cpf" name="cpf" class="form-input w-full p-2 rounded-md" placeholder="000.000.000-00" required>
+                        <label for="cpf" class="block text-sm font-medium text-gray-300 mb-1">Documento Mortal (CPF)</label>
+                        <input type="text" id="cpf" name="cpf" class="form-input w-full p-3 rounded-md" placeholder="000.000.000-00" required maxlength="14">
                     </div>
                 </div>
 
-                <!-- Detalhes do Ingresso -->
-                <div class="my-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
+                <div class="my-6 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
                     <h3 class="font-bold text-lg mb-2">Seu Pedido</h3>
                     <div class="flex justify-between items-center">
-                        <span id="ticket-name" class="text-gray-300">Carregando ingresso...</span>
+                        <span id="ticket-name" class="text-gray-300">Carregando destino...</span>
                         <div class="flex items-center gap-2">
-                            <label for="quantidade">Qtd:</label>
+                            <label for="quantidade">Almas:</label>
                             <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="10" class="form-input w-16 text-center p-1 rounded-md">
                         </div>
                     </div>
                     <div class="flex justify-between items-center mt-4 text-xl font-bold">
-                        <span>Total</span>
+                        <span>Preço Total</span>
                         <span id="total-price">R$ 0,00</span>
                     </div>
                 </div>
@@ -80,63 +96,51 @@
         </div>
 
         <!-- Coluna de Pagamento -->
-        <div id="payment-section" class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-             <h3 class="text-xl font-bold mb-4">Escolha como pagar</h3>
-            <!-- Abas de Pagamento -->
-            <div class="flex rounded-md mb-4">
-                <button id="pix-tab" class="tab-button tab-active flex-1 p-2 rounded-l-md font-bold">PIX</button>
-                <button id="card-tab" class="tab-button tab-inactive flex-1 p-2 rounded-r-md font-bold">Cartão de Crédito</button>
-            </div>
-
-            <!-- Conteúdo PIX -->
-            <div id="pix-content">
-                <p class="text-sm text-gray-400 mb-4">Um QR Code será gerado após a confirmação. Por ser uma demonstração, o QR Code é fictício.</p>
-                <div class="bg-white p-4 rounded-md flex justify-center">
-                    <!-- 
-                        IMAGEM CORRIGIDA:
-                        O caminho agora é relativo. Crie uma pasta "images" ao lado do seu "pagamento.html" e coloque seu arquivo "Upix.jpg" dentro dela.
-                    -->
-                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-48 h-48" onerror="this.onerror=null;this.src='https://placehold.co/200x200/ffffff/000000?text=QR+Code+PIX';">
+        <div id="payment-section" class="card p-6 sm:p-8 rounded-xl flex flex-col">
+             <h3 class="text-xl font-bold mb-4">Forma de Pagamento</h3>
+            
+            <div id="pix-content" class="flex-grow flex flex-col">
+                <p class="text-sm text-gray-400 mb-4">Use o portal abaixo para enviar sua oferenda. O QR Code é apenas uma ilusão.</p>
+                <div class="bg-white p-4 rounded-md flex justify-center my-auto">
+                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-48 h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/200x200/000000/FFFFFF?text=QR+CODE';">
                 </div>
-                <input type="text" readonly value="sua-chave-pix-aqui" class="form-input w-full p-2 rounded-md mt-4 text-xs text-center">
-                <button class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave PIX</button>
-            </div>
-
-            <!-- Conteúdo Cartão de Crédito -->
-            <div id="card-content" class="hidden">
-                 <p class="text-sm text-gray-400 mb-4">Este é um formulário de demonstração. Não insira dados reais.</p>
-                <div class="space-y-3">
-                    <input type="text" placeholder="link Sympla" class="form-input w-full p-2 rounded-md">
-
-                    </div>
+                <div class="mt-auto">
+                    <input type="text" id="pix-key-input" readonly value="000.111.222-33" class="form-input w-full p-2 rounded-md mt-4 text-xs text-center">
+                    <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
                 </div>
             </div>
 
-             <!-- Botão Finalizar -->
-            <button id="submit-button" type="submit" form="payment-form" class="w-full bg-violet-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-violet-700 transition-colors">
-                Finalizar Compra
+            <button id="submit-button" type="submit" form="payment-form" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors transform hover:scale-105">
+                Confirmar Oferenda
             </button>
         </div>
         
-        <!-- Seção de Sucesso (Oculta) -->
-        <div id="success-message" class="hidden lg:col-span-2 text-center bg-green-900/50 border border-green-500 p-8 rounded-lg">
-             <h2 class="text-3xl font-bold text-green-400 mb-4">Compra Realizada com Sucesso!</h2>
-             <p class="text-lg text-gray-300">Seus dados foram enviados para a organização do evento. Você receberá um e-mail de confirmação em breve.</p>
-             <p class="text-sm text-gray-400 mt-2">(Esta é uma simulação. Seus dados foram para a planilha Google que você configurou).</p>
+        <!-- Seção de Comprovação (Oculta) -->
+        <div id="proof-section" class="hidden lg:col-span-2 card p-8 rounded-xl text-center animate-fade-in">
+             <h2 class="text-3xl font-bold text-orange-400 mb-4 font-creepster tracking-wider">Último Passo!</h2>
+             <p class="text-lg text-gray-300 mb-2">Seus dados foram registrados. Para validar seu ingresso, envie o comprovante do PIX para o WhatsApp:</p>
+             <a href="https://wa.me/5521999998888" target="_blank" class="text-2xl font-bold my-4 bg-gray-900 p-3 rounded-md inline-block hover:bg-gray-700 transition-colors">(21) 99999-8888</a>
+             <p class="text-gray-400 text-sm mb-6">Não se esqueça de incluir o nome completo usado no cadastro!</p>
+             <button id="final-button" class="w-full max-w-xs mx-auto bg-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-700 transition-colors transform hover:scale-105">Pacto Selado!</button>
+        </div>
+
+        <!-- Seção de Sucesso Final (Oculta) -->
+        <div id="success-message" class="hidden lg:col-span-2 card p-8 rounded-xl text-center animate-fade-in">
+             <h2 class="text-3xl font-bold text-green-400 mb-4 font-creepster tracking-wider">Tudo Certo!</h2>
+             <p class="text-lg text-gray-300">Aguardamos a comprovação do seu pagamento. Nos vemos na noite de Halloween... se tiver coragem.</p>
         </div>
     </div>
 
-
     <script>
         // --- CONFIGURAÇÃO ---
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz3Bc0A2vQxDN5lQjUGwvwsOb5v-9BY7sv988Whg7LGDAPJwQBJB6aVZfr2JKhdrC7hdA/exec'; 
+        const WEB_APP_URL = 'COLE_A_URL_CORRETA_AQUI'; 
 
-        // --- PREÇOS CORRIGIDOS ---
-        // Altere os valores de 'price' aqui para definir os novos preços.
+        // --- PREÇOS ---
         const ticketTypes = {
-            'lote2': { name: '2º Lote', price: 1 },   // Exemplo: alterado para 120
-            'vip': { name: 'Ingresso VIP', price: 1 }, // Exemplo: alterado para 180
-            'default': { name: 'Ingresso Padrão', price: 1 }
+            'sonho': { name: 'Passaporte Sonho', price: 1 },
+            'pesadelo': { name: 'Passe Pesadelo', price: 1 },
+            'vip': { name: 'VIP Submundo', price: 1 },
+            'default': { name: 'Passaporte Sonho', price: 1 }
         };
 
         // --- ELEMENTOS DO DOM ---
@@ -145,52 +149,36 @@
         const ticketNameEl = document.getElementById('ticket-name');
         const totalPriceEl = document.getElementById('total-price');
         const quantityInput = document.getElementById('quantidade');
+        const copyPixKeyButton = document.getElementById('copy-pix-key');
+        const cpfInput = document.getElementById('cpf');
         
-        const pixTab = document.getElementById('pix-tab');
-        const cardTab = document.getElementById('card-tab');
-        const pixContent = document.getElementById('pix-content');
-        const cardContent = document.getElementById('card-content');
-
         const formSection = document.getElementById('form-section');
         const paymentSection = document.getElementById('payment-section');
+        const proofSection = document.getElementById('proof-section');
+        const finalButton = document.getElementById('final-button');
         const successMessage = document.getElementById('success-message');
-
+        
         let currentTicket = {};
 
         // --- FUNÇÕES ---
-
         function updatePrice() {
             const quantity = parseInt(quantityInput.value) || 0;
             const total = quantity * currentTicket.price;
             totalPriceEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        function switchTab(tabToShow) {
-            if (tabToShow === 'pix') {
-                pixTab.classList.replace('tab-inactive', 'tab-active');
-                cardTab.classList.replace('tab-active', 'tab-inactive');
-                pixContent.classList.remove('hidden');
-                cardContent.classList.add('hidden');
-            } else {
-                cardTab.classList.replace('tab-inactive', 'tab-active');
-                pixTab.classList.replace('tab-active', 'tab-inactive');
-                cardContent.classList.remove('hidden');
-                pixContent.classList.add('hidden');
-            }
-        }
-
         async function sendDataToSheet(data) {
-            if (WEB_APP_URL === 'SUA_URL_AQUI') {
-                alert('ERRO: Por favor, configure a URL do Google Apps Script na variável WEB_APP_URL no código Javascript.');
+            const payload = { action: 'add_sale', ...data };
+
+            if (WEB_APP_URL === 'COLE_A_URL_CORRETA_AQUI' || !WEB_APP_URL.endsWith('/exec')) {
+                alert('ERRO: A URL do Google Apps Script não está configurada corretamente.');
                 return { result: 'error', error: 'URL não configurada' };
             }
-
             try {
                 const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'cors',
+                    method: 'POST', mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(payload)
                 });
                 return await response.json();
             } catch (error) {
@@ -200,12 +188,10 @@
         }
         
         // --- LÓGICA PRINCIPAL ---
-
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const ticketKey = params.get('tipo') || 'default';
             currentTicket = ticketTypes[ticketKey];
-            
             ticketNameEl.textContent = currentTicket.name;
             updatePrice();
         });
@@ -213,38 +199,67 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!form.checkValidity()) {
-                alert('Por favor, preencha todos os campos corretamente.');
+                form.reportValidity(); // Mostra avisos de validação do navegador
                 return;
             }
-            
             submitButton.disabled = true;
-            submitButton.textContent = 'Processando...';
-
+            submitButton.textContent = 'Selando Pacto...';
             const formData = new FormData(form);
             const data = {
-                nome: formData.get('nome'),
-                email: formData.get('email'),
-                cpf: formData.get('cpf'),
-                ingresso: currentTicket.name,
+                nome: formData.get('nome'), email: formData.get('email'),
+                cpf: formData.get('cpf'), ingresso: currentTicket.name,
                 quantidade: formData.get('quantidade')
             };
-
             const response = await sendDataToSheet(data);
-
             if (response.result === 'success') {
                 formSection.classList.add('hidden');
                 paymentSection.classList.add('hidden');
-                successMessage.classList.remove('hidden');
+                proofSection.classList.remove('hidden');
             } else {
-                alert(`Ocorreu um erro ao registrar sua compra: ${response.error || 'Erro desconhecido'}. Tente novamente.`);
+                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
                 submitButton.disabled = false;
-                submitButton.textContent = 'Finalizar Compra';
+                submitButton.textContent = 'Confirmar Oferenda';
             }
         });
 
+        finalButton.addEventListener('click', () => {
+            proofSection.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        });
+
         quantityInput.addEventListener('input', updatePrice);
-        pixTab.addEventListener('click', () => switchTab('pix'));
-        cardTab.addEventListener('click', () => switchTab('card'));
+
+        // Função para copiar a chave PIX (mais robusta)
+        copyPixKeyButton.addEventListener('click', () => {
+            const pixKeyInput = document.getElementById('pix-key-input');
+            const keyToCopy = pixKeyInput.value;
+
+            // Cria um elemento de texto temporário para copiar
+            const tempInput = document.createElement('textarea');
+            tempInput.value = keyToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // Para dispositivos móveis
+
+            try {
+                document.execCommand('copy');
+                alert('Chave PIX copiada!');
+            } catch (err) {
+                alert('Erro ao copiar a chave. Por favor, copie manualmente.');
+            }
+
+            document.body.removeChild(tempInput);
+        });
+
+        // Máscara para o campo de CPF
+        cpfInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+
     </script>
 </body>
 </html>
