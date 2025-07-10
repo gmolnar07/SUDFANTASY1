@@ -64,8 +64,8 @@
                     <input type="email" id="email" name="email" class="form-input w-full p-3 rounded-md" required>
                 </div>
                 <div>
-                    <label for="cpf" class="block text-sm font-medium text-gray-300 mb-1">Documento Mortal (CPF)</label>
-                    <input type="text" id="cpf" name="cpf" class="form-input w-full p-3 rounded-md" placeholder="000.000.000-00" required maxlength="14">
+                    <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
+                    <input type="tel" id="telefone" name="telefone" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
                 </div>
             </div>
 
@@ -108,7 +108,7 @@
         const ticketNameEl = document.getElementById('ticket-name');
         const totalPriceEl = document.getElementById('total-price');
         const quantityInput = document.getElementById('quantidade');
-        const cpfInput = document.getElementById('cpf');
+        const telefoneInput = document.getElementById('telefone');
         
         let currentTicket = {};
         let currentTotal = 0;
@@ -131,20 +131,16 @@
             try {
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // <-- CORREÇÃO PRINCIPAL APLICADA AQUI
+                    mode: 'no-cors',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload)
                 });
                 
-                // Como 'no-cors' não nos permite ler a resposta, não podemos confirmar o sucesso aqui.
-                // No entanto, como sabemos que os dados estão a chegar à folha de cálculo,
-                // podemos assumir que o pedido foi bem-sucedido e continuar.
                 return { result: 'success' };
 
             } catch (error) {
-                // Este bloco de 'catch' agora só será acionado por um verdadeiro erro de rede (ex: sem internet).
                 console.error("Erro de rede ao enviar para o Google Sheets:", error);
                 return { result: 'error', error: error.toString() };
             }
@@ -169,14 +165,14 @@
             submitButton.textContent = 'Registrando...';
             const formData = new FormData(form);
             const data = {
-                nome: formData.get('nome'), email: formData.get('email'),
-                cpf: formData.get('cpf'), ingresso: currentTicket.name,
+                nome: formData.get('nome'), 
+                email: formData.get('email'),
+                telefone: formData.get('telefone'), // Alterado de 'cpf' para 'telefone'
+                ingresso: currentTicket.name,
                 quantidade: formData.get('quantidade')
             };
             const response = await sendDataToSheet(data);
 
-            // Como agora assumimos o sucesso, este 'if' deve sempre ser verdadeiro
-            // a menos que haja um erro de rede.
             if (response.result === 'success') {
                 const nome = formData.get('nome');
                 window.location.href = `comprovante.html?nome=${encodeURIComponent(nome)}&total=${currentTotal}`;
@@ -189,11 +185,11 @@
 
         quantityInput.addEventListener('input', updatePrice);
 
-        cpfInput.addEventListener('input', (e) => {
+        // Máscara para o campo de Telefone
+        telefoneInput.addEventListener('input', (e) => {
             let value = e.target.value.replace(/\D/g, '');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+            value = value.replace(/(\d)(\d{4})$/, '$1-$2');
             e.target.value = value;
         });
     </script>
