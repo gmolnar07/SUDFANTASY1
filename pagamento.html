@@ -92,7 +92,7 @@
 
     <script>
         // --- CONFIGURAÇÃO ---
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz-h7q8HOf0imv28E9qabO4T4WGfJIcOwb1-6cNVz1uO7L3qZe9NvYMr8Km2Q3gYXFlgQ/exec'; 
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzTEX7nDx8fnzAJvgszzhG1gRmTcWbQD-ZCHIm_HzsMVVGb73fae2NArMdCePmYKYIW-A/exec'; 
 
         // --- PREÇOS ---
         const ticketTypes = {
@@ -123,17 +123,32 @@
         async function sendDataToSheet(data) {
             const payload = { action: 'add_sale', ...data };
 
-            if (WEB_APP_URL === 'COLE_A_URL_CORRETA_AQUI' || !WEB_APP_URL.endsWith('/exec')) {
-                alert('ERRO: A URL do Google Apps Script não está configurada corretamente.');
-                return { result: 'error', error: 'URL não configurada' };
+            // Verificação da URL
+            if (!WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) {
+                alert('ERRO: A URL do Google Apps Script parece estar incorreta ou não foi configurada. Por favor, verifique o código.');
+                return { result: 'error', error: 'URL inválida' };
             }
+            
             try {
+                // CORREÇÃO APLICADA AQUI:
+                // Mudamos o 'Content-Type' para 'text/plain'. Isso evita o erro de CORS
+                // porque o navegador trata como um pedido "simples" e não faz a verificação extra.
                 const response = await fetch(WEB_APP_URL, {
-                    method: 'POST', mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    headers: {
+                      'Content-Type': 'text/plain;charset=utf-8',
+                    },
                     body: JSON.stringify(payload)
                 });
-                return await response.json();
+                
+                // O Google Script pode redirecionar, então precisamos tratar a resposta como texto
+                const textResponse = await response.text();
+                const jsonResponse = JSON.parse(textResponse);
+
+                return jsonResponse;
+
             } catch (error) {
                 console.error("Erro ao enviar para o Google Sheets:", error);
                 return { result: 'error', error: error.toString() };
