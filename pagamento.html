@@ -92,14 +92,14 @@
 
     <script>
         // --- CONFIGURAÇÃO ---
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzTEX7nDx8fnzAJvgszzhG1gRmTcWbQD-ZCHIm_HzsMVVGb73fae2NArMdCePmYKYIW-A/exec'; 
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwF6l3ZL1fh7EFPouNChCJcu92B4eMKPg99D3MMpfi1nmeKvkxlp4vilT4uPR0ewCZ3nA/exec'; 
 
         // --- PREÇOS ---
         const ticketTypes = {
-            'sonho': { name: 'Passaporte Sonho', price: 1 },
-            'pesadelo': { name: 'Passe Pesadelo', price: 2 },
-            'vip': { name: 'VIP Submundo', price: 3 },
-            'default': { name: 'Passaporte Sonho', price: 4 }
+            'sonho': { name: 'Passaporte Sonho', price: 90 },
+            'pesadelo': { name: 'Passe Pesadelo', price: 130 },
+            'vip': { name: 'VIP Submundo', price: 200 },
+            'default': { name: 'Passaporte Sonho', price: 90 }
         };
 
         // --- ELEMENTOS DO DOM ---
@@ -122,26 +122,23 @@
 
         async function sendDataToSheet(data) {
             const payload = { action: 'add_sale', ...data };
-
-            if (!WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) {
-                alert('ERRO: A URL do Google Apps Script parece estar incorreta ou não foi configurada. Por favor, verifique o código.');
-                return { result: 'error', error: 'URL inválida' };
-            }
             
             try {
-                await fetch(WEB_APP_URL, {
+                const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
+                    body: new URLSearchParams(payload) // Envia como formulário, que é mais compatível
                 });
                 
-                return { result: 'success' };
+                if (response.ok) {
+                    return { result: 'success' };
+                } else {
+                    // Se a resposta não for 'ok', tenta ler o erro
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Erro desconhecido do servidor.');
+                }
 
             } catch (error) {
-                console.error("Erro de rede ao enviar para o Google Sheets:", error);
+                console.error("Erro ao enviar para o Google Sheets:", error);
                 return { result: 'error', error: error.toString() };
             }
         }
@@ -167,7 +164,7 @@
             const data = {
                 nome: formData.get('nome'), 
                 email: formData.get('email'),
-                telefone: formData.get('telefone'), // Alterado de 'cpf' para 'telefone'
+                telefone: formData.get('telefone'),
                 ingresso: currentTicket.name,
                 quantidade: formData.get('quantidade')
             };
@@ -177,7 +174,7 @@
                 const nome = formData.get('nome');
                 window.location.href = `comprovante.html?nome=${encodeURIComponent(nome)}&total=${currentTotal}`;
             } else {
-                alert(`Ocorreu um erro de rede: ${response.error || 'Tente novamente.'}`);
+                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
                 submitButton.disabled = false;
                 submitButton.textContent = 'Registrar Dados e Pagar';
             }
@@ -185,7 +182,6 @@
 
         quantityInput.addEventListener('input', updatePrice);
 
-        // Máscara para o campo de Telefone
         telefoneInput.addEventListener('input', (e) => {
             let value = e.target.value.replace(/\D/g, '');
             value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
