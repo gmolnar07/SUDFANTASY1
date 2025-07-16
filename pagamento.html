@@ -205,7 +205,20 @@
 
             if (response.result === 'success') {
                 const nome = formData.get('nome');
-                window.location.href = `comprovante.html?nome=${encodeURIComponent(nome)}&total=${currentTotal}`;
+                // Linha a ser substituída no seu ficheiro pagamento.html
+                const queryString = new URLSearchParams({
+                    nome: formData.get('nome'),
+                    email: formData.get('email'),
+                    telefone: formData.get('telefone'),
+                    tipo_participante: formData.get('tipo_participante'),
+                    ala: formData.get('ala') || '',
+                    estaca: formData.get('estaca') || '',
+                    ingresso: currentTicket.name,
+                    quantidade: formData.get('quantidade'),
+                    total: currentTotal
+                }).toString();
+
+                window.location.href = `comprovante.html?${queryString}`;
             } else {
                 alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
                 submitButton.disabled = false;

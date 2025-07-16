@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento e Comprovação - Halloween</title>
-    
-    <!-- Tailwind CSS & Google Fonts -->
+    <title>Comprovação - Halloween</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <style>
         .font-creepster { font-family: 'Creepster', cursive; }
-        .font-lato { font-family: 'Lato', sans-serif; }
         body { 
             font-family: 'Lato', sans-serif;
             background-color: #0c0a09;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ea580c' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('images/estrelas-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f9fafb;
         }
         .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
         .card {
@@ -25,80 +25,142 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .file-input-label {
+            cursor: pointer;
+            border: 2px dashed #4b5563;
+            padding: 2rem;
+            transition: all 0.3s ease;
         }
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
+        .file-input-label:hover {
+            border-color: #f97316;
+            background-color: #1f2937;
         }
     </style>
 </head>
-<body class="bg-stone-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center animate-fade-in">
-        <h1 id="welcome-title" class="text-3xl font-bold text-orange-400 mb-4 font-creepster tracking-wider">Último Passo!</h1>
-        <p class="text-lg text-gray-300 mb-4">Realize o pagamento PIX no valor de <strong id="total-value" class="text-yellow-400">R$ 0,00</strong> e envie o comprovante.</p>
+    <div id="upload-section" class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center">
+        <h1 id="welcome-title" class="text-3xl font-creepster text-orange-400 mb-4 tracking-wider">Último Passo!</h1>
+        <p class="text-lg text-gray-300 mb-2">Realize o pagamento PIX no valor de <strong id="total-value" class="text-yellow-400">R$ 0,00</strong>.</p>
+        <p class="text-lg text-gray-300 mb-6">Depois, anexe o comprovativo abaixo para validar o seu ingresso.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
             <!-- Coluna do QR Code -->
             <div class="flex flex-col items-center">
-                <h2 class="font-bold mb-2">Pague com QR Code</h2>
+                <h2 class="font-bold mb-2">1. Pague com PIX</h2>
                 <div class="bg-white p-4 rounded-md flex justify-center">
-                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-48 h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/200x200/000000/FFFFFF?text=QR+CODE';">
+                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover">
                 </div>
-                 <input type="text" id="pix-key-input" readonly value="00020126360014BR.GOV.BCB.PIX0114+55219878927025204000053039865802BR5925LEONARDO
-LUCHETTI CORTINH6007NITEROI62070503***6304BC47" class="bg-gray-700 w-full p-2 rounded-md mt-4 text-xs text-center">
-                 <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
             </div>
-            <!-- Coluna do WhatsApp -->
-            <div class="flex flex-col items-center justify-center bg-gray-900/50 p-6 rounded-lg">
-                 <h2 class="font-bold mb-2">Envie o Comprovante</h2>
-                 <p class="text-gray-400 text-sm mb-4">Após pagar, clique abaixo para enviar o comprovante via WhatsApp.</p>
-                 <a href="https://wa.me/5521999998888?text=Ol%C3%A1!%20Estou%20enviando%20o%20comprovante%20do%20ingresso%20para%20a%20festa%20de%20Halloween." target="_blank" class="text-lg font-bold bg-green-600 p-4 rounded-lg inline-flex items-center gap-3 hover:bg-green-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.5-.5c.1-.1.2-.3.3-.4.1-.2.1-.3 0-.5s-.8-1.8-.8-1.8-.2-.4-.4-.4h-.4c-.2 0-.4.2-.4.4 0 .2.6.8.6 1.8 0 1 .8 2.1 1 2.3.1.2 1.5 2.3 3.6 3.2.5.2.9.4 1.2.5.5.2 1 .1 1.4-.1.4-.3.6-.7.8-.9.2-.2.2-.4.1-.5l-.2-.2zM12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/></svg>
-                    <span>Enviar Comprovante</span>
-                </a>
+            <!-- Coluna do Upload -->
+            <div class="flex flex-col items-center">
+                <h2 class="font-bold mb-2">2. Anexe o Comprovante</h2>
+                <form id="upload-form">
+                    <label for="file-upload" class="file-input-label rounded-lg flex flex-col items-center justify-center text-center">
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H21a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path></svg>
+                        <span id="file-name" class="mt-2 text-sm text-gray-400">Clique para selecionar</span>
+                    </label>
+                    <input id="file-upload" name="file" type="file" class="sr-only" accept="image/png, image/jpeg, image/jpg">
+                </form>
             </div>
         </div>
         
-        <a href="index.html" class="text-orange-400 hover:text-orange-300 transition-colors mt-4 inline-block">Voltar para a página inicial</a>
+        <button id="submit-proof" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
+            Enviar Comprovante e Finalizar
+        </button>
+    </div>
+
+    <div id="success-section" class="hidden w-full max-w-lg mx-auto card p-8 sm:p-12 rounded-xl text-center">
+        <h1 class="text-3xl font-creepster text-green-400 mb-4 tracking-wider">Pacto Selado!</h1>
+        <p class="text-lg text-gray-300">O seu comprovativo foi enviado com sucesso! Você receberá um e-mail de confirmação assim que o pagamento for verificado pela nossa equipa.</p>
+        <a href="index.html" class="text-orange-400 hover:text-orange-300 transition-colors mt-6 inline-block">Voltar para a página inicial</a>
     </div>
 
     <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzE649mKEbMC5HbDiqZWYjEZ4LUvDm0eYBJWKeVFwrmyG4N5WJog-Bbgfz6lQTKU0re-A/exec';
+
+        const uploadSection = document.getElementById('upload-section');
+        const successSection = document.getElementById('success-section');
+        const welcomeTitle = document.getElementById('welcome-title');
+        const totalValue = document.getElementById('total-value');
+        const fileUploadInput = document.getElementById('file-upload');
+        const fileNameSpan = document.getElementById('file-name');
+        const submitProofButton = document.getElementById('submit-proof');
+
+        let buyerInfo = {};
+
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            const nome = params.get('nome');
-            const total = params.get('total');
+            buyerInfo = {
+                nome: params.get('nome') || '',
+                total: params.get('total') || 0,
+                // Passamos todos os dados para esta página para enviar junto com o ficheiro
+                email: params.get('email') || '',
+                telefone: params.get('telefone') || '',
+                tipo_participante: params.get('tipo_participante') || '',
+                ala: params.get('ala') || '',
+                estaca: params.get('estaca') || '',
+                ingresso: params.get('ingresso') || '',
+                quantidade: params.get('quantidade') || 0,
+            };
 
-            const welcomeTitle = document.getElementById('welcome-title');
-            const totalValue = document.getElementById('total-value');
-
-            if (nome) {
-                const primeiroNome = nome.split(' ')[0];
-                welcomeTitle.textContent = `Último Passo, ${primeiroNome}!`;
+            if (buyerInfo.nome) {
+                welcomeTitle.textContent = `Último Passo, ${buyerInfo.nome.split(' ')[0]}!`;
             }
-            if (total) {
-                totalValue.textContent = `R$ ${parseFloat(total).toFixed(2).replace('.', ',')}`;
+            if (buyerInfo.total) {
+                totalValue.textContent = `R$ ${parseFloat(buyerInfo.total).toFixed(2).replace('.', ',')}`;
             }
         });
 
-        // Função para copiar a chave PIX
-        document.getElementById('copy-pix-key').addEventListener('click', () => {
-            const pixKeyInput = document.getElementById('pix-key-input');
-            const keyToCopy = pixKeyInput.value;
-            const tempInput = document.createElement('textarea');
-            tempInput.value = keyToCopy;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            tempInput.setSelectionRange(0, 99999);
-            try {
-                document.execCommand('copy');
-                alert('Chave PIX copiada!');
-            } catch (err) {
-                alert('Erro ao copiar a chave. Por favor, copie manualmente.');
+        fileUploadInput.addEventListener('change', () => {
+            if (fileUploadInput.files.length > 0) {
+                fileNameSpan.textContent = fileUploadInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Clique para selecionar';
             }
-            document.body.removeChild(tempInput);
+        });
+
+        submitProofButton.addEventListener('click', async () => {
+            if (fileUploadInput.files.length === 0) {
+                alert('Por favor, selecione o ficheiro do comprovativo.');
+                return;
+            }
+
+            submitProofButton.disabled = true;
+            submitProofButton.textContent = 'Enviando...';
+
+            const file = fileUploadInput.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = async (event) => {
+                const fileData = event.target.result.split(',')[1]; // Extrai os dados em base64
+                const payload = {
+                    file: fileData,
+                    fileName: file.name,
+                    fileType: file.type,
+                    buyerInfo: buyerInfo
+                };
+
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.result === 'success') {
+                        uploadSection.classList.add('hidden');
+                        successSection.classList.remove('hidden');
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (error) {
+                    alert(`Ocorreu um erro ao enviar o comprovativo: ${error.message}`);
+                    submitProofButton.disabled = false;
+                    submitProofButton.textContent = 'Enviar Comprovativo e Finalizar';
+                }
+            };
         });
     </script>
 </body>
