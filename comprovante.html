@@ -42,7 +42,7 @@
     <div id="upload-section" class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center">
         <h1 id="welcome-title" class="text-3xl font-creepster text-orange-400 mb-4 tracking-wider">Último Passo!</h1>
         <p class="text-lg text-gray-300 mb-2">Realize o pagamento PIX no valor de <strong id="total-value" class="text-yellow-400">R$ 0,00</strong>.</p>
-        <p class="text-lg text-gray-300 mb-6">Depois, anexe o comprovativo abaixo para validar o seu ingresso.</p>
+        <p class="text-lg text-gray-300 mb-6">Depois, anexe o Comprovante abaixo para validar o seu ingresso.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
             <!-- Coluna do QR Code -->
@@ -51,12 +51,15 @@
                 <div class="bg-white p-4 rounded-md flex justify-center">
                     <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover">
                 </div>
+                <input type="text" id="pix-key-input" readonly value="00020126360014BR.GOV.BCB.PIX0114+55219878927025204000053039865802BR5925LEONARDO
+LUCHETTI CORTINH6007NITEROI62070503***6304BC47" class="bg-gray-700 w-full p-2 rounded-md mt-4 text-xs text-center">
+                <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
             </div>
             <!-- Coluna do Upload -->
             <div class="flex flex-col items-center">
                 <h2 class="font-bold mb-2">2. Anexe o Comprovante</h2>
                 <form id="upload-form">
-                    <label for="file-upload" class="file-input-label rounded-lg flex flex-col items-center justify-center text-center">
+                    <label for="file-upload" class="file-input-label rounded-lg flex flex-col items-center justify-center text-center h-full">
                         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H21a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path></svg>
                         <span id="file-name" class="mt-2 text-sm text-gray-400">Clique para selecionar</span>
                     </label>
@@ -72,12 +75,12 @@
 
     <div id="success-section" class="hidden w-full max-w-lg mx-auto card p-8 sm:p-12 rounded-xl text-center">
         <h1 class="text-3xl font-creepster text-green-400 mb-4 tracking-wider">Pacto Selado!</h1>
-        <p class="text-lg text-gray-300">O seu comprovativo foi enviado com sucesso! Você receberá um e-mail de confirmação assim que o pagamento for verificado pela nossa equipa.</p>
+        <p class="text-lg text-gray-300">O seu comprovante foi enviado com sucesso! Você receberá um e-mail de confirmação assim que o pagamento for verificado pela nossa equipa.</p>
         <a href="index.html" class="text-orange-400 hover:text-orange-300 transition-colors mt-6 inline-block">Voltar para a página inicial</a>
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzE649mKEbMC5HbDiqZWYjEZ4LUvDm0eYBJWKeVFwrmyG4N5WJog-Bbgfz6lQTKU0re-A/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzupVjTpwcwX8G5V1Ov4lyGN8_2u_4h4gl_5JJ_KLOzegtI3VklQTH_FBcdANQ0RlpssQ/exec';
 
         const uploadSection = document.getElementById('upload-section');
         const successSection = document.getElementById('success-section');
@@ -93,8 +96,6 @@
             const params = new URLSearchParams(window.location.search);
             buyerInfo = {
                 nome: params.get('nome') || '',
-                total: params.get('total') || 0,
-                // Passamos todos os dados para esta página para enviar junto com o ficheiro
                 email: params.get('email') || '',
                 telefone: params.get('telefone') || '',
                 tipo_participante: params.get('tipo_participante') || '',
@@ -103,12 +104,13 @@
                 ingresso: params.get('ingresso') || '',
                 quantidade: params.get('quantidade') || 0,
             };
+            const total = params.get('total') || 0;
 
             if (buyerInfo.nome) {
                 welcomeTitle.textContent = `Último Passo, ${buyerInfo.nome.split(' ')[0]}!`;
             }
-            if (buyerInfo.total) {
-                totalValue.textContent = `R$ ${parseFloat(buyerInfo.total).toFixed(2).replace('.', ',')}`;
+            if (total) {
+                totalValue.textContent = `R$ ${parseFloat(total).toFixed(2).replace('.', ',')}`;
             }
         });
 
@@ -134,7 +136,7 @@
             reader.readAsDataURL(file);
 
             reader.onload = async (event) => {
-                const fileData = event.target.result.split(',')[1]; // Extrai os dados em base64
+                const fileData = event.target.result.split(',')[1];
                 const payload = {
                     file: fileData,
                     fileName: file.name,

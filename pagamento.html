@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Halloween</title>
-    
-    <!-- Tailwind CSS & Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <style>
         .font-creepster { font-family: 'Creepster', cursive; }
         .font-lato { font-family: 'Lato', sans-serif; }
         body { 
             font-family: 'Lato', sans-serif;
             background-color: #0c0a09;
-            background-image: url("images/estrelas-bg.jpg");
+            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('images/estrelas-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f9fafb;
         }
         .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
         .form-input {
@@ -67,7 +68,6 @@
                     <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
                     <input type="tel" id="telefone" name="telefone" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
                 </div>
-                
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Você é membro da igreja ou visitante?</label>
                     <div class="flex gap-x-6">
@@ -81,8 +81,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Campos para Ala e Estaca (inicialmente ocultos) -->
                 <div id="membro-info" class="hidden space-y-4 mt-4 transition-all duration-500">
                     <div>
                         <label for="ala" class="block text-sm font-medium text-gray-300 mb-1">Sua Ala</label>
@@ -111,26 +109,20 @@
             </div>
             
             <button id="submit-button" type="submit" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors transform hover:scale-105">
-                Registrar Dados e Pagar
+                Continuar para Pagamento
             </button>
         </form>
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO ---
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzE649mKEbMC5HbDiqZWYjEZ4LUvDm0eYBJWKeVFwrmyG4N5WJog-Bbgfz6lQTKU0re-A/exec'; 
-
-        // --- PREÇOS ---
         const ticketTypes = {
-            'sonho': { name: 'Passaporte Sonho', price: 1 },
+            'sonho': { name: 'Ingresso', price: 90 },
             'pesadelo': { name: 'Passe Pesadelo', price: 25 },
-            'vip': { name: 'VIP Submundo', price: 3 },
-            'default': { name: 'Passaporte Sonho', price: 4 }
+            'vip': { name: 'VIP Submundo', price: 200 },
+            'default': { name: 'Ingresso', price: 25 }
         };
 
-        // --- ELEMENTOS DO DOM ---
         const form = document.getElementById('payment-form');
-        const submitButton = document.getElementById('submit-button');
         const ticketNameEl = document.getElementById('ticket-name');
         const totalPriceEl = document.getElementById('total-price');
         const quantityInput = document.getElementById('quantidade');
@@ -144,36 +136,12 @@
         let currentTicket = {};
         let currentTotal = 0;
 
-        // --- FUNÇÕES ---
         function updatePrice() {
             const quantity = parseInt(quantityInput.value) || 0;
             currentTotal = quantity * currentTicket.price;
             totalPriceEl.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
         }
-
-        async function sendDataToSheet(data) {
-            const payload = { action: 'add_sale', ...data };
-            
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: new URLSearchParams(payload)
-                });
-                
-                if (response.ok) {
-                    return { result: 'success' };
-                } else {
-                    const errorText = await response.text();
-                    throw new Error(errorText || 'Erro desconhecido do servidor.');
-                }
-
-            } catch (error) {
-                console.error("Erro ao enviar para o Google Sheets:", error);
-                return { result: 'error', error: error.toString() };
-            }
-        }
         
-        // --- LÓGICA PRINCIPAL ---
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const ticketKey = params.get('tipo') || 'default';
@@ -182,48 +150,27 @@
             updatePrice();
         });
 
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
-            submitButton.disabled = true;
-            submitButton.textContent = 'Registrando...';
+            
             const formData = new FormData(form);
-            const data = {
-                nome: formData.get('nome'), 
+            const params = new URLSearchParams({
+                nome: formData.get('nome'),
                 email: formData.get('email'),
                 telefone: formData.get('telefone'),
                 tipo_participante: formData.get('tipo_participante'),
-                ala: formData.get('ala') || '', // Pega o valor ou envia string vazia
-                estaca: formData.get('estaca') || '', // Pega o valor ou envia string vazia
+                ala: formData.get('ala') || '',
+                estaca: formData.get('estaca') || '',
                 ingresso: currentTicket.name,
-                quantidade: formData.get('quantidade')
-            };
-            const response = await sendDataToSheet(data);
+                quantidade: formData.get('quantidade'),
+                total: currentTotal
+            }).toString();
 
-            if (response.result === 'success') {
-                const nome = formData.get('nome');
-                // Linha a ser substituída no seu ficheiro pagamento.html
-                const queryString = new URLSearchParams({
-                    nome: formData.get('nome'),
-                    email: formData.get('email'),
-                    telefone: formData.get('telefone'),
-                    tipo_participante: formData.get('tipo_participante'),
-                    ala: formData.get('ala') || '',
-                    estaca: formData.get('estaca') || '',
-                    ingresso: currentTicket.name,
-                    quantidade: formData.get('quantidade'),
-                    total: currentTotal
-                }).toString();
-
-                window.location.href = `comprovante.html?${queryString}`;
-            } else {
-                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrar Dados e Pagar';
-            }
+            window.location.href = `comprovante.html?${params}`;
         });
 
         quantityInput.addEventListener('input', updatePrice);
@@ -235,7 +182,6 @@
             e.target.value = value;
         });
 
-        // Lógica para mostrar/ocultar campos de Ala e Estaca
         membroRadio.addEventListener('change', () => {
             membroInfoDiv.classList.remove('hidden');
             alaInput.required = true;
@@ -246,8 +192,8 @@
             membroInfoDiv.classList.add('hidden');
             alaInput.required = false;
             estacaInput.required = false;
-            alaInput.value = ''; // Limpa o campo se o usuário mudar de ideia
-            estacaInput.value = ''; // Limpa o campo se o usuário mudar de ideia
+            alaInput.value = '';
+            estacaInput.value = '';
         });
     </script>
 </body>
