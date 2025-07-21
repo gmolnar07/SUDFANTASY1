@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <title>Registro - Halloween</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,68 +37,23 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
     </style>
 </head>
 <body class="bg-stone-900 text-white flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-lg mx-auto card p-6 sm:p-8 rounded-xl animate-fade-in">
+    <div class="w-full max-w-2xl mx-auto card p-6 sm:p-8 rounded-xl">
         <h1 class="font-creepster text-4xl md:text-5xl text-orange-500 uppercase tracking-wider text-shadow-orange mb-2 text-center">
             Registro
         </h1>
-        <p class="text-center text-gray-300 mb-6">Preencha seus dados para garantir seu ingresso.</p>
+        <p class="text-center text-gray-300 mb-6">Preencha os dados para garantir seu(s) ingresso(s).</p>
 
         <form id="payment-form" novalidate>
-            <div class="space-y-4">
-                <div>
-                    <label for="nome" class="block text-sm font-medium text-gray-300 mb-1">Nome</label>
-                    <input type="text" id="nome" name="nome" class="form-input w-full p-3 rounded-md" required>
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">E-mail de Contato</label>
-                    <input type="email" id="email" name="email" class="form-input w-full p-3 rounded-md" required>
-                </div>
-                <div>
-                    <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
-                    <input type="tel" id="telefone" name="telefone" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Você é membro da igreja ou visitante?</label>
-                    <div class="flex gap-x-6">
-                        <div class="flex items-center">
-                            <input id="membro" name="tipo_participante" type="radio" value="Membro" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" required>
-                            <label for="membro" class="ml-3 block text-sm font-medium leading-6 text-gray-200">Membro</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input id="visitante" name="tipo_participante" type="radio" value="Visitante" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
-                            <label for="visitante" class="ml-3 block text-sm font-medium leading-6 text-gray-200">Visitante</label>
-                        </div>
-                    </div>
-                </div>
-                <div id="membro-info" class="hidden space-y-4 mt-4 transition-all duration-500">
-                    <div>
-                        <label for="ala" class="block text-sm font-medium text-gray-300 mb-1">Sua Ala</label>
-                        <input type="text" id="ala" name="ala" class="form-input w-full p-3 rounded-md">
-                    </div>
-                    <div>
-                        <label for="estaca" class="block text-sm font-medium text-gray-300 mb-1">Sua Estaca</label>
-                        <input type="text" id="estaca" name="estaca" class="form-input w-full p-3 rounded-md">
-                    </div>
-                </div>
-            </div>
-
-            <div class="my-6 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
-                <h3 class="font-bold text-lg mb-2">Seu Pedido</h3>
+            <!-- Detalhes do Pedido -->
+            <div class="mb-6 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
                 <div class="flex justify-between items-center">
-                    <span id="ticket-name" class="text-gray-300">Carregando destino...</span>
+                    <span id="ticket-name" class="text-gray-300 font-bold">Carregando destino...</span>
                     <div class="flex items-center gap-2">
-                        <label for="quantidade">Quantidade:</label>
+                        <label for="quantidade">Ingressos:</label>
                         <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="10" class="form-input w-16 text-center p-1 rounded-md">
                     </div>
                 </div>
@@ -107,39 +62,149 @@
                     <span id="total-price">R$ 0,00</span>
                 </div>
             </div>
+
+            <!-- Container para os formulários dos participantes -->
+            <div id="attendees-container" class="space-y-8">
+                <!-- O formulário do primeiro participante será inserido aqui -->
+            </div>
             
-            <button id="submit-button" type="submit" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors transform hover:scale-105">
+            <button id="submit-button" type="submit" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-8 hover:bg-orange-700 transition-colors transform hover:scale-105">
                 Continuar para Pagamento
             </button>
         </form>
     </div>
 
     <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8jinWD-sDg76cfcc1NrlS8wqeab7ktVGtrhWAv5Yap6K6E10NgmOfm95tH9lsws5J/exec'; 
         const ticketTypes = {
-            'sonho': { name: 'Ingresso', price: 90 },
-            'pesadelo': { name: 'Passe Pesadelo', price: 25 },
+            'sonho': { name: 'Passaporte Sonho', price: 90 },
+            'pesadelo': { name: 'Passe Pesadelo', price: 130 },
             'vip': { name: 'VIP Submundo', price: 200 },
             'default': { name: 'Ingresso', price: 25 }
         };
 
         const form = document.getElementById('payment-form');
+        const attendeesContainer = document.getElementById('attendees-container');
         const ticketNameEl = document.getElementById('ticket-name');
         const totalPriceEl = document.getElementById('total-price');
         const quantityInput = document.getElementById('quantidade');
-        const telefoneInput = document.getElementById('telefone');
-        const membroRadio = document.getElementById('membro');
-        const visitanteRadio = document.getElementById('visitante');
-        const membroInfoDiv = document.getElementById('membro-info');
-        const alaInput = document.getElementById('ala');
-        const estacaInput = document.getElementById('estaca');
         
         let currentTicket = {};
         let currentTotal = 0;
 
         function updatePrice() {
-            const quantity = parseInt(quantityInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 1;
             currentTotal = quantity * currentTicket.price;
             totalPriceEl.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
+            generateAttendeeForms(quantity);
+        }
+
+        function generateAttendeeForms(quantity) {
+            attendeesContainer.innerHTML = ''; // Limpa os formulários existentes
+            for (let i = 1; i <= quantity; i++) {
+                const isFirst = i === 1;
+                const title = isFirst ? 'Comprador Principal' : `Convidado ${i}`;
+                const attendeeHTML = `
+                    <div class="p-4 border border-gray-700 rounded-lg">
+                        <h3 class="font-bold text-lg mb-4 text-orange-400">${title}</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="nome-${i}" class="block text-sm font-medium text-gray-300 mb-1">Nome</label>
+                                <input type="text" id="nome-${i}" name="nome-${i}" class="form-input w-full p-3 rounded-md" required>
+                            </div>
+                            ${isFirst ? `
+                            <div>
+                                <label for="email-${i}" class="block text-sm font-medium text-gray-300 mb-1">E-mail de Contato</label>
+                                <input type="email" id="email-${i}" name="email-${i}" class="form-input w-full p-3 rounded-md" required>
+                            </div>
+                            ` : ''}
+                            <div>
+                                <label for="telefone-${i}" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
+                                <input type="tel" id="telefone-${i}" name="telefone-${i}" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Você é membro da igreja ou visitante?</label>
+                                <div class="flex gap-x-6">
+                                    <div class="flex items-center">
+                                        <input id="membro-${i}" name="tipo_participante-${i}" type="radio" value="Membro" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" required>
+                                        <label for="membro-${i}" class="ml-3 block text-sm font-medium text-gray-200">Membro</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="visitante-${i}" name="tipo_participante-${i}" type="radio" value="Visitante" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
+                                        <label for="visitante-${i}" class="ml-3 block text-sm font-medium text-gray-200">Visitante</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="membro-info-${i}" class="hidden space-y-4 mt-4">
+                                <div>
+                                    <label for="ala-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Ala</label>
+                                    <input type="text" id="ala-${i}" name="ala-${i}" class="form-input w-full p-3 rounded-md">
+                                </div>
+                                <div>
+                                    <label for="estaca-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Estaca</label>
+                                    <input type="text" id="estaca-${i}" name="estaca-${i}" class="form-input w-full p-3 rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                attendeesContainer.insertAdjacentHTML('beforeend', attendeeHTML);
+            }
+            addDynamicEventListeners();
+        }
+
+        function addDynamicEventListeners() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            for (let i = 1; i <= quantity; i++) {
+                // Máscara de telefone
+                document.getElementById(`telefone-${i}`).addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                    value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                    e.target.value = value;
+                });
+
+                // Lógica para mostrar/ocultar campos de membro
+                const membroRadio = document.getElementById(`membro-${i}`);
+                const visitanteRadio = document.getElementById(`visitante-${i}`);
+                const membroInfoDiv = document.getElementById(`membro-info-${i}`);
+                const alaInput = document.getElementById(`ala-${i}`);
+                const estacaInput = document.getElementById(`estaca-${i}`);
+
+                membroRadio.addEventListener('change', () => {
+                    membroInfoDiv.classList.remove('hidden');
+                    alaInput.required = true;
+                    estacaInput.required = true;
+                });
+
+                visitanteRadio.addEventListener('change', () => {
+                    membroInfoDiv.classList.add('hidden');
+                    alaInput.required = false;
+                    estacaInput.required = false;
+                    alaInput.value = '';
+                    estacaInput.value = '';
+                });
+            }
+        }
+
+        async function sendDataToSheet(attendees) {
+            const payload = { action: 'add_multiple_sales', attendees: attendees };
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+                if (response.ok) {
+                    return { result: 'success' };
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Erro desconhecido do servidor.');
+                }
+            } catch (error) {
+                console.error("Erro ao enviar para o Google Sheets:", error);
+                return { result: 'error', error: error.toString() };
+            }
         }
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -150,50 +215,47 @@
             updatePrice();
         });
 
-        form.addEventListener('submit', (e) => {
+        quantityInput.addEventListener('input', updatePrice);
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
             
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Registrando...';
+
             const formData = new FormData(form);
-            const params = new URLSearchParams({
-                nome: formData.get('nome'),
-                email: formData.get('email'),
-                telefone: formData.get('telefone'),
-                tipo_participante: formData.get('tipo_participante'),
-                ala: formData.get('ala') || '',
-                estaca: formData.get('estaca') || '',
-                ingresso: currentTicket.name,
-                quantidade: formData.get('quantidade'),
-                total: currentTotal
-            }).toString();
+            const attendees = [];
+            const quantity = parseInt(formData.get('quantidade')) || 1;
+            const buyerEmail = formData.get('email-1');
 
-            window.location.href = `comprovante.html?${params}`;
-        });
+            for (let i = 1; i <= quantity; i++) {
+                attendees.push({
+                    nome: formData.get(`nome-${i}`), 
+                    email: buyerEmail, // Usa o e-mail do comprador para todos
+                    telefone: formData.get(`telefone-${i}`),
+                    tipo_participante: formData.get(`tipo_participante-${i}`),
+                    ala: formData.get(`ala-${i}`) || '',
+                    estaca: formData.get(`estaca-${i}`) || '',
+                    ingresso: currentTicket.name,
+                    quantidade: 1 // Cada linha na planilha representa 1 ingresso
+                });
+            }
 
-        quantityInput.addEventListener('input', updatePrice);
+            const response = await sendDataToSheet(attendees);
 
-        telefoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
-            value = value.replace(/(\d)(\d{4})$/, '$1-$2');
-            e.target.value = value;
-        });
-
-        membroRadio.addEventListener('change', () => {
-            membroInfoDiv.classList.remove('hidden');
-            alaInput.required = true;
-            estacaInput.required = true;
-        });
-
-        visitanteRadio.addEventListener('change', () => {
-            membroInfoDiv.classList.add('hidden');
-            alaInput.required = false;
-            estacaInput.required = false;
-            alaInput.value = '';
-            estacaInput.value = '';
+            if (response.result === 'success') {
+                const buyerName = formData.get('nome-1');
+                window.location.href = `comprovante.html?nome=${encodeURIComponent(buyerName)}&total=${currentTotal}`;
+            } else {
+                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
+                submitButton.disabled = false;
+                submitButton.textContent = 'Continuar para Pagamento';
+            }
         });
     </script>
 </body>
