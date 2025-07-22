@@ -2,15 +2,14 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>Registro - Halloween</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprovação - Halloween</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         .font-creepster { font-family: 'Creepster', cursive; }
-        .font-lato { font-family: 'Lato', sans-serif; }
         body { 
             font-family: 'Lato', sans-serif;
             background-color: #0c0a09;
@@ -21,241 +20,148 @@
             color: #f9fafb;
         }
         .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
-        .form-input {
-            background-color: #1f2937;
-            border: 1px solid #4b5563;
-            transition: all 0.3s ease;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #f97316;
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.4);
-            background-color: #374151;
-        }
         .card {
             background-color: rgba(17, 24, 39, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
+        .file-input-label {
+            cursor: pointer;
+            border: 2px dashed #4b5563;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .file-input-label:hover {
+            border-color: #f97316;
+            background-color: #1f2937;
+        }
     </style>
 </head>
-<body class="bg-stone-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-2xl mx-auto card p-6 sm:p-8 rounded-xl">
-        <h1 class="font-creepster text-4xl md:text-5xl text-orange-500 uppercase tracking-wider text-shadow-orange mb-2 text-center">
-            Registro
-        </h1>
-        <p class="text-center text-gray-300 mb-6">Preencha os dados para garantir seu(s) ingresso(s).</p>
-
-        <form id="payment-form" novalidate>
-            <!-- Detalhes do Pedido -->
-            <div class="mb-6 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
-                <div class="flex justify-between items-center">
-                    <span id="ticket-name" class="text-gray-300 font-bold">Carregando destino...</span>
-                    <div class="flex items-center gap-2">
-                        <label for="quantidade">Ingressos:</label>
-                        <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="10" class="form-input w-16 text-center p-1 rounded-md">
-                    </div>
+    <div id="upload-section" class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center">
+        <h1 id="welcome-title" class="text-3xl font-creepster text-orange-400 mb-4 tracking-wider">Último Passo!</h1>
+        <p class="text-lg text-gray-300 mb-2">Realize o pagamento PIX no valor de <strong id="total-value" class="text-yellow-400">R$ 0,00</strong>.</p>
+        <p class="text-lg text-gray-300 mb-6">Depois, anexe o Comprovante abaixo para validar o seu ingresso.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
+            <!-- Coluna do QR Code -->
+            <div class="flex flex-col items-center">
+                <h2 class="font-bold mb-2">1. Pague com PIX</h2>
+                <div class="bg-white p-4 rounded-md flex justify-center">
+                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover">
                 </div>
-                <div class="flex justify-between items-center mt-4 text-xl font-bold">
-                    <span>Preço Total</span>
-                    <span id="total-price">R$ 0,00</span>
-                </div>
+                <input type="text" id="pix-key-input" readonly value="00020126580014BR.GOV.BCB.PIX01360b80d166-9d68-40c4-ae39-d006002a78095204000053039865802BR5925Guilherme de Oliveira Mol6009SAO PAULO62140510ti9AVsZVVB63042145" class="bg-gray-700 w-full p-2 rounded-md mt-4 text-xs text-center">
+                <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
             </div>
+            <!-- Coluna do Upload -->
+            <div class="flex flex-col items-center">
+                <h2 class="font-bold mb-2">2. Anexe o Comprovante</h2>
+                <form id="upload-form">
+                    <label for="file-upload" class="file-input-label rounded-lg flex flex-col items-center justify-center text-center h-full">
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H21a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path></svg>
+                        <span id="file-name" class="mt-2 text-sm text-gray-400">Clique para selecionar</span>
+                    </label>
+                    <input id="file-upload" name="file" type="file" class="sr-only" accept="image/png, image/jpeg, image/jpg">
+                </form>
+            </div>
+        </div>
+        
+        <button id="submit-proof" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
+            Enviar Comprovante e Finalizar
+        </button>
+    </div>
 
-            <!-- Container para os formulários dos participantes -->
-            <div id="attendees-container" class="space-y-8">
-                <!-- O formulário do primeiro participante será inserido aqui -->
-            </div>
-            
-            <button id="submit-button" type="submit" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-8 hover:bg-orange-700 transition-colors transform hover:scale-105">
-                Continuar para Pagamento
-            </button>
-        </form>
+    <div id="success-section" class="hidden w-full max-w-lg mx-auto card p-8 sm:p-12 rounded-xl text-center">
+        <h1 class="text-3xl font-creepster text-green-400 mb-4 tracking-wider">Feito!</h1>
+        <p class="text-lg text-gray-300">O seu comprovante foi enviado com sucesso! Você receberá um e-mail de confirmação assim que o pagamento for verificado pela nossa equipa.</p>
+        <a href="index.html" class="text-orange-400 hover:text-orange-300 transition-colors mt-6 inline-block">Voltar para a página inicial</a>
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8jinWD-sDg76cfcc1NrlS8wqeab7ktVGtrhWAv5Yap6K6E10NgmOfm95tH9lsws5J/exec'; 
-        const ticketTypes = {
-            'sonho': { name: 'Passaporte Sonho', price: 90 },
-            'pesadelo': { name: 'Passe Pesadelo', price: 130 },
-            'vip': { name: 'VIP Submundo', price: 200 },
-            'default': { name: 'Ingresso', price: 25 }
-        };
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzupVjTpwcwX8G5V1Ov4lyGN8_2u_4h4gl_5JJ_KLOzegtI3VklQTH_FBcdANQ0RlpssQ/exec';
 
-        const form = document.getElementById('payment-form');
-        const attendeesContainer = document.getElementById('attendees-container');
-        const ticketNameEl = document.getElementById('ticket-name');
-        const totalPriceEl = document.getElementById('total-price');
-        const quantityInput = document.getElementById('quantidade');
-        
-        let currentTicket = {};
-        let currentTotal = 0;
+        const uploadSection = document.getElementById('upload-section');
+        const successSection = document.getElementById('success-section');
+        const welcomeTitle = document.getElementById('welcome-title');
+        const totalValue = document.getElementById('total-value');
+        const fileUploadInput = document.getElementById('file-upload');
+        const fileNameSpan = document.getElementById('file-name');
+        const submitProofButton = document.getElementById('submit-proof');
 
-        function updatePrice() {
-            const quantity = parseInt(quantityInput.value) || 1;
-            currentTotal = quantity * currentTicket.price;
-            totalPriceEl.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
-            generateAttendeeForms(quantity);
-        }
+        let buyerInfo = {};
 
-        function generateAttendeeForms(quantity) {
-            attendeesContainer.innerHTML = ''; // Limpa os formulários existentes
-            for (let i = 1; i <= quantity; i++) {
-                const isFirst = i === 1;
-                const title = isFirst ? 'Comprador Principal' : `Convidado ${i}`;
-                const attendeeHTML = `
-                    <div class="p-4 border border-gray-700 rounded-lg">
-                        <h3 class="font-bold text-lg mb-4 text-orange-400">${title}</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label for="nome-${i}" class="block text-sm font-medium text-gray-300 mb-1">Nome</label>
-                                <input type="text" id="nome-${i}" name="nome-${i}" class="form-input w-full p-3 rounded-md" required>
-                            </div>
-                            ${isFirst ? `
-                            <div>
-                                <label for="email-${i}" class="block text-sm font-medium text-gray-300 mb-1">E-mail de Contato</label>
-                                <input type="email" id="email-${i}" name="email-${i}" class="form-input w-full p-3 rounded-md" required>
-                            </div>
-                            ` : ''}
-                            <div>
-                                <label for="telefone-${i}" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
-                                <input type="tel" id="telefone-${i}" name="telefone-${i}" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-300 mb-2">Você é membro da igreja ou visitante?</label>
-                                <div class="flex gap-x-6">
-                                    <div class="flex items-center">
-                                        <input id="membro-${i}" name="tipo_participante-${i}" type="radio" value="Membro" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" required>
-                                        <label for="membro-${i}" class="ml-3 block text-sm font-medium text-gray-200">Membro</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="visitante-${i}" name="tipo_participante-${i}" type="radio" value="Visitante" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
-                                        <label for="visitante-${i}" class="ml-3 block text-sm font-medium text-gray-200">Visitante</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="membro-info-${i}" class="hidden space-y-4 mt-4">
-                                <div>
-                                    <label for="ala-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Ala</label>
-                                    <input type="text" id="ala-${i}" name="ala-${i}" class="form-input w-full p-3 rounded-md">
-                                </div>
-                                <div>
-                                    <label for="estaca-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Estaca</label>
-                                    <input type="text" id="estaca-${i}" name="estaca-${i}" class="form-input w-full p-3 rounded-md">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                attendeesContainer.insertAdjacentHTML('beforeend', attendeeHTML);
-            }
-            addDynamicEventListeners();
-        }
-
-        function addDynamicEventListeners() {
-            const quantity = parseInt(quantityInput.value) || 1;
-            for (let i = 1; i <= quantity; i++) {
-                // Máscara de telefone
-                document.getElementById(`telefone-${i}`).addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/\D/g, '');
-                    value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
-                    value = value.replace(/(\d)(\d{4})$/, '$1-$2');
-                    e.target.value = value;
-                });
-
-                // Lógica para mostrar/ocultar campos de membro
-                const membroRadio = document.getElementById(`membro-${i}`);
-                const visitanteRadio = document.getElementById(`visitante-${i}`);
-                const membroInfoDiv = document.getElementById(`membro-info-${i}`);
-                const alaInput = document.getElementById(`ala-${i}`);
-                const estacaInput = document.getElementById(`estaca-${i}`);
-
-                membroRadio.addEventListener('change', () => {
-                    membroInfoDiv.classList.remove('hidden');
-                    alaInput.required = true;
-                    estacaInput.required = true;
-                });
-
-                visitanteRadio.addEventListener('change', () => {
-                    membroInfoDiv.classList.add('hidden');
-                    alaInput.required = false;
-                    estacaInput.required = false;
-                    alaInput.value = '';
-                    estacaInput.value = '';
-                });
-            }
-        }
-
-        async function sendDataToSheet(attendees) {
-            const payload = { action: 'add_multiple_sales', attendees: attendees };
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                });
-                if (response.ok) {
-                    return { result: 'success' };
-                } else {
-                    const errorText = await response.text();
-                    throw new Error(errorText || 'Erro desconhecido do servidor.');
-                }
-            } catch (error) {
-                console.error("Erro ao enviar para o Google Sheets:", error);
-                return { result: 'error', error: error.toString() };
-            }
-        }
-        
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            const ticketKey = params.get('tipo') || 'default';
-            currentTicket = ticketTypes[ticketKey];
-            ticketNameEl.textContent = currentTicket.name;
-            updatePrice();
+            buyerInfo = {
+                nome: params.get('nome') || '',
+                email: params.get('email') || '',
+                telefone: params.get('telefone') || '',
+                tipo_participante: params.get('tipo_participante') || '',
+                ala: params.get('ala') || '',
+                estaca: params.get('estaca') || '',
+                ingresso: params.get('ingresso') || '',
+                quantidade: params.get('quantidade') || 0,
+            };
+            const total = params.get('total') || 0;
+
+            if (buyerInfo.nome) {
+                welcomeTitle.textContent = `Último Passo, ${buyerInfo.nome.split(' ')[0]}!`;
+            }
+            if (total) {
+                totalValue.textContent = `R$ ${parseFloat(total).toFixed(2).replace('.', ',')}`;
+            }
         });
 
-        quantityInput.addEventListener('input', updatePrice);
+        fileUploadInput.addEventListener('change', () => {
+            if (fileUploadInput.files.length > 0) {
+                fileNameSpan.textContent = fileUploadInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Clique para selecionar';
+            }
+        });
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!form.checkValidity()) {
-                form.reportValidity();
+        submitProofButton.addEventListener('click', async () => {
+            if (fileUploadInput.files.length === 0) {
+                alert('Por favor, selecione o ficheiro do comprovativo.');
                 return;
             }
-            
-            const submitButton = document.getElementById('submit-button');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Registrando...';
 
-            const formData = new FormData(form);
-            const attendees = [];
-            const quantity = parseInt(formData.get('quantidade')) || 1;
-            const buyerEmail = formData.get('email-1');
+            submitProofButton.disabled = true;
+            submitProofButton.textContent = 'Enviando...';
 
-            for (let i = 1; i <= quantity; i++) {
-                attendees.push({
-                    nome: formData.get(`nome-${i}`), 
-                    email: buyerEmail, // Usa o e-mail do comprador para todos
-                    telefone: formData.get(`telefone-${i}`),
-                    tipo_participante: formData.get(`tipo_participante-${i}`),
-                    ala: formData.get(`ala-${i}`) || '',
-                    estaca: formData.get(`estaca-${i}`) || '',
-                    ingresso: currentTicket.name,
-                    quantidade: 1 // Cada linha na planilha representa 1 ingresso
-                });
-            }
+            const file = fileUploadInput.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
 
-            const response = await sendDataToSheet(attendees);
+            reader.onload = async (event) => {
+                const fileData = event.target.result.split(',')[1];
+                const payload = {
+                    file: fileData,
+                    fileName: file.name,
+                    fileType: file.type,
+                    buyerInfo: buyerInfo
+                };
 
-            if (response.result === 'success') {
-                const buyerName = formData.get('nome-1');
-                window.location.href = `comprovante.html?nome=${encodeURIComponent(buyerName)}&total=${currentTotal}`;
-            } else {
-                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
-                submitButton.disabled = false;
-                submitButton.textContent = 'Continuar para Pagamento';
-            }
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.result === 'success') {
+                        uploadSection.classList.add('hidden');
+                        successSection.classList.remove('hidden');
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (error) {
+                    alert(`Ocorreu um erro ao enviar o comprovativo: ${error.message}`);
+                    submitProofButton.disabled = false;
+                    submitProofButton.textContent = 'Enviar Comprovativo e Finalizar';
+                }
+            };
         });
     </script>
 </body>
