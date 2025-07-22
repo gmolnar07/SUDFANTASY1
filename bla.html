@@ -13,7 +13,7 @@
         body { 
             font-family: 'Lato', sans-serif;
             background-color: #0c0a09;
-            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('images/estrelas-bg.jpg');
+            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('https://placehold.co/1920x1080/0c0a09/f9fafb?text=');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -49,9 +49,11 @@
             <div class="flex flex-col items-center">
                 <h2 class="font-bold mb-2">1. Pague com PIX</h2>
                 <div class="bg-white p-4 rounded-md flex justify-center">
-                    <img src="images/Upix.jpg" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover">
+                    <img src="https://placehold.co/160x160/ffffff/000000?text=QR+Code" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/160x160/ffffff/000000?text=QR+Code+Error';">
                 </div>
-                <input type="text" id="pix-key-input" readonly value="00020126580014BR.GOV.BCB.PIX01360b80d166-9d68-40c4-ae39-d006002a78095204000053039865802BR5925Guilherme de Oliveira Mol6009SAO PAULO62140510ti9AVsZVVB63042145" class="bg-gray-700 w-full p-2 rounded-md mt-4 text-xs text-center">
+                <!-- Texto adicionado para identificar a chave -->
+                <p class="text-sm text-gray-400 mt-4 mb-1">Chave PIX Aleatória</p>
+                <input type="text" id="pix-key-input" readonly value="ffc46d70-fcc0-4471-acbb-94b7cdf2166a" class="bg-gray-700 w-full p-2 rounded-md text-xs text-center">
                 <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
             </div>
             <!-- Coluna do Upload -->
@@ -88,6 +90,8 @@
         const fileUploadInput = document.getElementById('file-upload');
         const fileNameSpan = document.getElementById('file-name');
         const submitProofButton = document.getElementById('submit-proof');
+        const copyButton = document.getElementById('copy-pix-key');
+        const pixInput = document.getElementById('pix-key-input');
 
         let buyerInfo = {};
 
@@ -113,6 +117,30 @@
             }
         });
 
+        // Funcionalidade para copiar a chave PIX
+        copyButton.addEventListener('click', () => {
+            // Seleciona o texto no campo de input
+            pixInput.select();
+            pixInput.setSelectionRange(0, 99999); // Para compatibilidade com dispositivos móveis
+
+            try {
+                // Tenta copiar o texto para a área de transferência
+                document.execCommand('copy');
+                copyButton.textContent = 'Copiado!';
+                // Retorna ao texto original após 2 segundos
+                setTimeout(() => {
+                    copyButton.textContent = 'Copiar Chave';
+                }, 2000);
+            } catch (err) {
+                // Exibe um erro caso a cópia falhe
+                console.error('Falha ao copiar a chave PIX:', err);
+                copyButton.textContent = 'Erro ao copiar';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copiar Chave';
+                }, 2000);
+            }
+        });
+
         fileUploadInput.addEventListener('change', () => {
             if (fileUploadInput.files.length > 0) {
                 fileNameSpan.textContent = fileUploadInput.files[0].name;
@@ -123,7 +151,8 @@
 
         submitProofButton.addEventListener('click', async () => {
             if (fileUploadInput.files.length === 0) {
-                alert('Por favor, selecione o ficheiro do comprovativo.');
+                // Use um modal ou uma mensagem customizada em vez de alert
+                console.log('Por favor, selecione o ficheiro do comprovativo.');
                 return;
             }
 
@@ -157,9 +186,9 @@
                         throw new Error(result.error);
                     }
                 } catch (error) {
-                    alert(`Ocorreu um erro ao enviar o comprovativo: ${error.message}`);
+                    console.error(`Ocorreu um erro ao enviar o comprovativo: ${error.message}`);
                     submitProofButton.disabled = false;
-                    submitProofButton.textContent = 'Enviar Comprovativo e Finalizar';
+                    submitProofButton.textContent = 'Enviar Comprovante e Finalizar';
                 }
             };
         });
