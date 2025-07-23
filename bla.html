@@ -3,195 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprovação - Halloween</title>
+    <title>Sud Fantasy - Em Manutenção</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         .font-creepster { font-family: 'Creepster', cursive; }
-        body { 
-            font-family: 'Lato', sans-serif;
-            background-color: #0c0a09;
-            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('https://placehold.co/1920x1080/0c0a09/f9fafb?text=');
+        .font-lato { font-family: 'Lato', sans-serif; }
+
+        body {
+            background-image: linear-gradient(rgba(10, 2, 5, 0.92), rgba(15, 2, 5, 0.97)), url('images/estrelas-bg.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: #f9fafb;
+            font-family: 'Lato', sans-serif;
         }
-        .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
+
+        .text-shadow-orange {
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.8), 0 0 12px rgba(249, 115, 22, 0.6);
+        }
+
         .card {
-            background-color: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
+            background-color: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
-        .file-input-label {
-            cursor: pointer;
-            border: 2px dashed #4b5563;
-            padding: 2rem;
-            transition: all 0.3s ease;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .file-input-label:hover {
-            border-color: #f97316;
-            background-color: #1f2937;
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-6">
 
-    <div id="upload-section" class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center">
-        <h1 id="welcome-title" class="text-3xl font-creepster text-orange-400 mb-4 tracking-wider">Último Passo!</h1>
-        <p class="text-lg text-gray-300 mb-2">Realize o pagamento PIX no valor de <strong id="total-value" class="text-yellow-400">R$ 0,00</strong>.</p>
-        <p class="text-lg text-gray-300 mb-6">Depois, anexe o Comprovante abaixo para validar o seu ingresso.</p>
+    <div class="w-full max-w-2xl mx-auto card p-8 sm:p-12 rounded-xl text-center animate-fade-in">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-6">
-            <!-- Coluna do QR Code -->
-            <div class="flex flex-col items-center">
-                <h2 class="font-bold mb-2">1. Pague com PIX</h2>
-                <div class="bg-white p-4 rounded-md flex justify-center">
-                    <img src="https://placehold.co/160x160/ffffff/000000?text=QR+Code" alt="QR Code PIX" class="rounded-md w-40 h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/160x160/ffffff/000000?text=QR+Code+Error';">
-                </div>
-                <!-- Texto adicionado para identificar a chave -->
-                <p class="text-sm text-gray-400 mt-4 mb-1">Chave PIX Aleatória</p>
-                <input type="text" id="pix-key-input" readonly value="ffc46d70-fcc0-4471-acbb-94b7cdf2166a" class="bg-gray-700 w-full p-2 rounded-md text-xs text-center">
-                <button id="copy-pix-key" class="w-full mt-2 bg-gray-600 p-2 rounded-md hover:bg-gray-500 transition-colors text-sm">Copiar Chave</button>
-            </div>
-            <!-- Coluna do Upload -->
-            <div class="flex flex-col items-center">
-                <h2 class="font-bold mb-2">2. Anexe o Comprovante</h2>
-                <form id="upload-form">
-                    <label for="file-upload" class="file-input-label rounded-lg flex flex-col items-center justify-center text-center h-full">
-                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H21a4 4 0 014 4v5a4 4 0 01-4 4H7z"></path></svg>
-                        <span id="file-name" class="mt-2 text-sm text-gray-400">Clique para selecionar</span>
-                    </label>
-                    <input id="file-upload" name="file" type="file" class="sr-only" accept="image/png, image/jpeg, image/jpg">
-                </form>
-            </div>
+        <h1 class="font-creepster text-5xl md:text-7xl text-orange-500 uppercase tracking-widest text-shadow-orange">
+            Sud Fantasy
+        </h1>
+        
+        <div class="my-8">
+            <svg class="w-16 h-16 mx-auto text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
+
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-100">Estamos em Manutenção!</h2>
         
-        <button id="submit-proof" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-6 hover:bg-orange-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
-            Enviar Comprovante e Finalizar
-        </button>
+        <p class="mt-4 text-lg text-gray-300">
+            Estamos a preparar uma virada de lote com novos preços e surpresas. As vendas de ingressos voltarão em breve!
+        </p>
+        
+        <p class="mt-6 text-gray-400">
+            Para não perder nenhuma novidade, siga-nos no Instagram:
+        </p>
+        
+        <a href="https://www.instagram.com/sudfantasy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="mt-4 inline-block bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold py-3 px-8 rounded-lg text-lg uppercase transition-all duration-300 transform hover:scale-105">
+            @sudfantasy
+        </a>
     </div>
 
-    <div id="success-section" class="hidden w-full max-w-lg mx-auto card p-8 sm:p-12 rounded-xl text-center">
-        <h1 class="text-3xl font-creepster text-green-400 mb-4 tracking-wider">Feito!</h1>
-        <p class="text-lg text-gray-300">O seu comprovante foi enviado com sucesso! Você receberá um e-mail de confirmação assim que o pagamento for verificado pela nossa equipa.</p>
-        <a href="index.html" class="text-orange-400 hover:text-orange-300 transition-colors mt-6 inline-block">Voltar para a página inicial</a>
-    </div>
-
-    <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzupVjTpwcwX8G5V1Ov4lyGN8_2u_4h4gl_5JJ_KLOzegtI3VklQTH_FBcdANQ0RlpssQ/exec';
-
-        const uploadSection = document.getElementById('upload-section');
-        const successSection = document.getElementById('success-section');
-        const welcomeTitle = document.getElementById('welcome-title');
-        const totalValue = document.getElementById('total-value');
-        const fileUploadInput = document.getElementById('file-upload');
-        const fileNameSpan = document.getElementById('file-name');
-        const submitProofButton = document.getElementById('submit-proof');
-        const copyButton = document.getElementById('copy-pix-key');
-        const pixInput = document.getElementById('pix-key-input');
-
-        let buyerInfo = {};
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            buyerInfo = {
-                nome: params.get('nome') || '',
-                email: params.get('email') || '',
-                telefone: params.get('telefone') || '',
-                tipo_participante: params.get('tipo_participante') || '',
-                ala: params.get('ala') || '',
-                estaca: params.get('estaca') || '',
-                ingresso: params.get('ingresso') || '',
-                quantidade: params.get('quantidade') || 0,
-            };
-            const total = params.get('total') || 0;
-
-            if (buyerInfo.nome) {
-                welcomeTitle.textContent = `Último Passo, ${buyerInfo.nome.split(' ')[0]}!`;
-            }
-            if (total) {
-                totalValue.textContent = `R$ ${parseFloat(total).toFixed(2).replace('.', ',')}`;
-            }
-        });
-
-        // Funcionalidade para copiar a chave PIX
-        copyButton.addEventListener('click', () => {
-            // Seleciona o texto no campo de input
-            pixInput.select();
-            pixInput.setSelectionRange(0, 99999); // Para compatibilidade com dispositivos móveis
-
-            try {
-                // Tenta copiar o texto para a área de transferência
-                document.execCommand('copy');
-                copyButton.textContent = 'Copiado!';
-                // Retorna ao texto original após 2 segundos
-                setTimeout(() => {
-                    copyButton.textContent = 'Copiar Chave';
-                }, 2000);
-            } catch (err) {
-                // Exibe um erro caso a cópia falhe
-                console.error('Falha ao copiar a chave PIX:', err);
-                copyButton.textContent = 'Erro ao copiar';
-                setTimeout(() => {
-                    copyButton.textContent = 'Copiar Chave';
-                }, 2000);
-            }
-        });
-
-        fileUploadInput.addEventListener('change', () => {
-            if (fileUploadInput.files.length > 0) {
-                fileNameSpan.textContent = fileUploadInput.files[0].name;
-            } else {
-                fileNameSpan.textContent = 'Clique para selecionar';
-            }
-        });
-
-        submitProofButton.addEventListener('click', async () => {
-            if (fileUploadInput.files.length === 0) {
-                // Use um modal ou uma mensagem customizada em vez de alert
-                console.log('Por favor, selecione o ficheiro do comprovativo.');
-                return;
-            }
-
-            submitProofButton.disabled = true;
-            submitProofButton.textContent = 'Enviando...';
-
-            const file = fileUploadInput.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-
-            reader.onload = async (event) => {
-                const fileData = event.target.result.split(',')[1];
-                const payload = {
-                    file: fileData,
-                    fileName: file.name,
-                    fileType: file.type,
-                    buyerInfo: buyerInfo
-                };
-
-                try {
-                    const response = await fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-
-                    if (result.result === 'success') {
-                        uploadSection.classList.add('hidden');
-                        successSection.classList.remove('hidden');
-                    } else {
-                        throw new Error(result.error);
-                    }
-                } catch (error) {
-                    console.error(`Ocorreu um erro ao enviar o comprovativo: ${error.message}`);
-                    submitProofButton.disabled = false;
-                    submitProofButton.textContent = 'Enviar Comprovante e Finalizar';
-                }
-            };
-        });
-    </script>
 </body>
 </html>
