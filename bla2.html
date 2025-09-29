@@ -3,283 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Halloween</title>
+    <title>Halloween: Entre Sonhos e Pesadelos</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Define as fontes personalizadas */
         .font-creepster { font-family: 'Creepster', cursive; }
-        .font-lato { font-family: 'Lato', sans-serif; }
-        body { 
-            font-family: 'Lato', sans-serif;
-            background-color: #0c0a09;
-            background-image: linear-gradient(rgba(10, 0, 0, 0.9), rgba(5, 0, 0, 0.95)), url('images/estrelas-bg.jpg');
+        .font-inter { font-family: 'Inter', sans-serif; }
+
+        /* Estilo do corpo da página */
+        body {
+
+            background-image: linear-gradient(rgba(20, 4, 10, 0.9), rgba(14, 2, 5, 0.95)), url('images/estrelas-bg.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            color: #f9fafb;
+            background-attachment: fixed; /* Mantém o fundo fixo durante o scroll */
+            color: #f9fafb; /* Cinza claro para o texto padrão */
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
-        .text-shadow-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
-        .form-input {
-            background-color: #1f2937;
-            border: 1px solid #4b5563;
-            transition: all 0.3s ease;
+
+        /* Efeito de brilho laranja para textos */
+        .text-shadow-orange {
+            text-shadow: 0 0 5px rgba(249, 115, 22, 0.7), 
+                         0 0 15px rgba(249, 115, 22, 0.5), 
+                         0 0 25px rgba(234, 88, 12, 0.4);
         }
-        .form-input:focus {
-            outline: none;
-            border-color: #f97316;
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.4);
-            background-color: #374151;
+
+        /* Efeito de brilho laranja para bordas e caixas */
+        .border-glow-orange {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.7);
         }
-        .card {
-            background-color: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(249, 115, 22, 0.2);
+
+        /* Animação de pulsação para o botão principal */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 35px rgba(249, 115, 22, 0.9);
+            }
+        }
+        
+        .animate-pulse-button {
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+
+        /* Estilos para animações de scroll */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Adiciona delays para um efeito escalonado */
+        .animate-on-scroll.delay-1 { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.4s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.6s; }
+
+        /* Estilo para o canvas de partículas */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Coloca o canvas atrás do conteúdo */
+        }
+        
+        /* Garante que o conteúdo do header fique na frente do canvas */
+        header > * {
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
-<body class="bg-stone-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-900">
 
-    <div class="w-full max-w-2xl mx-auto card p-6 sm:p-8 rounded-xl">
-        <h1 class="font-creepster text-4xl md:text-5xl text-orange-500 uppercase tracking-wider text-shadow-orange mb-2 text-center">
-            Registro
+    <!-- Hero Section -->
+    <header class="min-h-screen w-full flex flex-col justify-center items-center text-center p-6 overflow-hidden relative">
+        <!-- Canvas para o efeito de partículas -->
+        <canvas id="particle-canvas"></canvas>
+        
+        <h1 class="font-creepster text-6xl md:text-9xl text-orange-500 uppercase tracking-widest text-shadow-orange">
+            Sud Fantasy 
         </h1>
-        <p class="text-center text-gray-300 mb-6">Preencha os dados para garantir seu(s) ingresso(s).</p>
+        <h1 class="font-creepster text-4xl md:text-6xl text-orange-500 uppercase tracking-widest text-shadow-orange mb-6">
+             Halloween
+        </h1>
+        
+        <p class="text-2xl md:text-4xl text-purple-300 font-creepster">
+            Entre Sonhos e Pesadelos
+        </p>
 
-        <form id="payment-form" novalidate>
-            <!-- Detalhes do Pedido -->
-            <div class="mb-6 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
-                <div class="flex justify-between items-center">
-                    <span id="ticket-name" class="text-gray-300 font-bold">Carregando destino...</span>
-                    <div class="flex items-center gap-2">
-                        <label for="quantidade">Ingressos:</label>
-                        <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="10" class="form-input w-16 text-center p-1 rounded-md">
+
+    </header>
+
+    <main>
+        <!-- Info Section -->
+        <section id="info" class="py-16 sm:py-24 bg-black/20">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 hover:border-orange-500 transition-colors duration-300 animate-on-scroll">
+                        <svg class="w-12 h-12 mx-auto text-orange-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0h18M8.625 15h.008v.008H8.625V15Zm2.625 0h.008v.008h-.008V15Zm2.625 0h.008v.008h-.008V15Z" /></svg>
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">A Noite</h3>
+                        <p class="text-lg text-gray-300 mt-2">Sabado, 01 de Novembro de 2025</p>
+                        <p class="text-lg text-gray-300">A partir das 18hrs</p>
+                    </div>
+
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 hover:border-orange-500 transition-colors duration-300 animate-on-scroll delay-1">
+                        <svg class="w-12 h-12 mx-auto text-orange-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">O Local</h3>
+                        <p class="text-lg text-gray-300 mt-2">Clube do Fluminense</p>
+                        <p class="text-lg text-gray-300">R. Xavier de Brito, 22 - Centro, Niterói - RJ, 24030-140</p>
+                    </div>
+
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 hover:border-orange-500 transition-colors duration-300 animate-on-scroll delay-2">
+                        <!-- Ícone de máscara, mais temático -->
+                        <svg class="w-12 h-12 mx-auto text-orange-500 mb-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.29 15.71c-1.33 1.33-3.09 2.29-5.29 2.29s-3.96-.96-5.29-2.29C4.96 16.96 4 15.21 4 13c0-1.04.25-2.04.71-2.93.46-.89 1.1-1.69 1.88-2.37C7.8 6.49 9.3 5.5 11 5.5c.34 0 .68.03 1 .08.32.05.63.13.94.22.62.18 1.2.43 1.72.74.52.31 1 .68 1.41 1.09.42.42.79.89 1.09 1.41.31.52.56 1.1.74 1.72.09.31.17.62.22.94.05.32.08.66.08 1 0 2.21-.96 3.96-2.29 5.29zM12 7.5c-1.93 0-3.5 1.57-3.5 3.5S10.07 14.5 12 14.5s3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5z"/></svg>
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">O Traje</h3>
+                        <p class="text-lg text-gray-300 mt-2">Vista Sua Melhor fantasia</p>
+                        <p class="text-lg text-gray-300">Sonho ou Pesadelo?</p>
                     </div>
                 </div>
-                <div class="flex justify-between items-center mt-4 text-xl font-bold">
-                    <span>Preço Total</span>
-                    <span id="total-price">R$ 0,00</span>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section id="mapa" class="py-16 sm:py-24 bg-gray-900/70 backdrop-blur-sm">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Onde o Pesadelo Acontece</h2>
+                <div class="mt-12 rounded-lg overflow-hidden border-2 border-orange-800 shadow-lg animate-on-scroll delay-1">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8720.2586873738!2d-43.12667845745411!3d-22.886863767076328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9983c01460611b%3A0xf0372b1f3ab18022!2sFluminense%20Atl%C3%A9tico%20Clube%20(Clube%20Fluminensinho)!5e1!3m2!1spt-BR!2sbr!4v1752176058673!5m2!1spt-BR!2sbr" class="w-full h-96 md:h-[500px]" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
+        </section>
 
-            <!-- Container para os formulários dos participantes -->
-            <div id="attendees-container" class="space-y-8">
-                <!-- O formulário do primeiro participante será inserido aqui -->
+        <!-- Attractions Section -->
+        <section id="atracoes" class="py-16 sm:py-24 bg-gray-900/70 backdrop-blur-sm">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Atrações Secretas</h2>
+                <p class="text-lg text-gray-400 mt-2 mb-12 max-w-3xl mx-auto animate-on-scroll delay-1">As atrações são um enigma guardado a sete chaves. Espere o inesperado e prepare-se para ser surpreendido.</p>
+                <div class="flex justify-center animate-on-scroll delay-2">
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-purple-800 max-w-md text-center">
+                         <svg class="w-16 h-16 mx-auto text-purple-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                        </svg>
+                        <h4 class="text-2xl font-bold text-purple-300 font-creepster tracking-wider">Um Segredo a Ser Revelado</h4>
+                    </div>
+                </div>
             </div>
-            
-            <button id="submit-button" type="submit" class="w-full bg-orange-600 text-white font-bold py-3 px-6 rounded-lg mt-8 hover:bg-orange-700 transition-colors transform hover:scale-105">
-                Continuar para Pagamento
-            </button>
-        </form>
-    </div>
+        </section>
+
+        
+
+        <!-- Rules Section -->
+        <section id="regras" class="py-16 sm:py-24 bg-gray-900/70 backdrop-blur-sm">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Regras</h2>
+                <p class="text-lg text-gray-400 mt-2 mb-12 max-w-2xl mx-auto animate-on-scroll delay-1">Para que a noite seja um sonho para todos (e um pesadelo apenas no bom sentido), siga nossas regras:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Regra 1: Classificação -->
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 animate-on-scroll">
+                        <svg class="w-12 h-12 mx-auto text-red-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                           <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="10" font-weight="bold" fill="white">18</text>
+                        </svg>
+                        <h4 class="text-xl font-bold text-red-300 font-inter">Classificação: 18 Anos</h4>
+                        <p class="text-gray-300 mt-2 text-sm">Evento exclusivo para maiores de idade. Apresentação de documento oficial com foto é obrigatória.</p>
+                    </div>
+                    <!-- Regra 2: Reconhecimento -->
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 animate-on-scroll delay-1">
+                        <svg class="w-12 h-12 mx-auto text-yellow-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 1 0-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 0 1 3.15 0v1.5m-3.15 0 .075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 0 1 3.15 0V15M6.9 7.575a1.575 1.575 0 1 0-3.15 0v8.175a6.75 6.75 0 0 0 6.75 6.75h2.018a5.25 5.25 0 0 0 5.25-5.25v-2.925" />
+                        </svg>
+                        <h4 class="text-xl font-bold text-yellow-300 font-inter">Identificação</h4>
+                        <p class="text-gray-300 mt-2 text-sm">Proibido o uso de fantasias que impossibilitem o total reconhecimento da pessoa.</p>
+                    </div>
+                    <!-- Regra 3: Temas -->
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 animate-on-scroll delay-2">
+                         <svg class="w-12 h-12 mx-auto text-purple-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                        </svg>
+                        <h4 class="text-xl font-bold text-purple-300 font-inter">Temas Restritos</h4>
+                        <p class="text-gray-300 mt-2 text-sm">Não serão permitidas fantasias que remetam a membros da trindade, anjos, demônios e afins.</p>
+                    </div>
+                    <!-- Regra 4: Ingresso -->
+                    <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 animate-on-scroll delay-3">
+                        <svg class="w-12 h-12 mx-auto text-green-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5A.75.75 0 0 1 4.5 3.75h15a.75.75 0 0 1 .75.75v15a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75v-15Zm5.25 1.5a.75.75 0 0 0-.75.75v3a.75.75 0 0 0 .75.75h3a.75.75 0 0 0 .75-.75v-3a.75.75 0 0 0-.75-.75h-3Zm0 9a.75.75 0 0 0-.75.75v3a.75.75 0 0 0 .75.75h3a.75.75 0 0 0 .75-.75v-3a.75.75 0 0 0-.75-.75h-3Zm9-9a.75.75 0 0 0-.75.75v3a.75.75 0 0 0 .75.75h3a.75.75 0 0 0 .75-.75v-3a.75.75 0 0 0-.75-.75h-3Zm0 9a.75.75 0 0 0-.75.75v3a.75.75 0 0 0 .75.75h3a.75.75 0 0 0 .75-.75v-3a.75.75 0 0 0-.75-.75h-3Z" />
+                        </svg>
+                        <h4 class="text-xl font-bold text-green-300 font-inter">Entrada Digital</h4>
+                        <p class="text-gray-300 mt-2 text-sm">Acesso mediante apresentação do QR Code do ingresso (impresso ou no celular).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+        <!-- Instagram Section -->
+        <section id="instagram" class="py-16 sm:py-24 bg-gray-900/70 backdrop-blur-sm">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Fique por Dentro</h2>
+                <p class="text-lg text-gray-400 mt-2 mb-12 max-w-2xl mx-auto animate-on-scroll delay-1">Siga-nos no Instagram para não perder nenhuma novidade ou spoiler da noite!</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 animate-on-scroll delay-2">
+                    <a href="https://www.instagram.com/sudfantasy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold py-4 px-10 rounded-lg text-xl uppercase transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/50">
+                        Seguir @sudfantasy
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tickets Section -->
+        <section id="ingressos" class="py-16 sm:py-24 bg-black/20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Garanta seu ingresso</h2>
+                <p class="text-lg text-gray-400 mt-2 mb-12 max-w-2xl mx-auto animate-on-scroll delay-1">Os ingressos são limitados, Garanta já!!!</p>
+                
+
+                <div class="w-full flex justify-center items-center">
+                    <div class="w-full flex justify-center items-center gap-8">
+                        <div class="w-full max-w-sm border-2 border-orange-500 bg-gray-900/70 backdrop-blur-sm rounded-xl p-8 flex flex-col relative border-glow-orange animate-on-scroll delay-1">
+                            <span class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-sm font-bold px-4 py-1 rounded-full uppercase">2° Lote</span>
+                            <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">Passe Pesadelo</h3>
+                            <p class="text-5xl font-bold my-4">R$30</p>
+                            <ul class="text-left text-gray-300 space-y-2 mb-8 flex-grow">
+                                </ul>
+                            <a href="pagamento.html?tipo=pesadelo" class="mt-auto bg-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-500 transition-colors">Aqui</a>
+                        </div>
+                        
+
+                    </div>
+                </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+
+
+
+        <section id="ingressos" class="py-16 sm:py-24 bg-black/20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-creepster uppercase text-shadow-orange animate-on-scroll">Garanta sua entrada</h2>
+                <p class="text-lg text-gray-400 mt-2 mb-12 max-w-2xl mx-auto animate-on-scroll delay-1">Escolha sua experiência e não fique de fora dessa noite assustadoramente divertida!</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    
+                    <!-- Opção 1: Ingresso Normal -->
+                    <div class="border-2 border-orange-800 bg-gray-900/70 backdrop-blur-sm rounded-xl p-8 flex flex-col relative animate-on-scroll">
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">Ingresso Sonho</h3>
+                        <p class="text-5xl font-bold my-4">R$30</p>
+                        <ul class="text-left text-gray-300 space-y-2 mb-8 flex-grow">
+                           <li class="flex items-start"><span class="text-orange-500 mr-2">✓</span> Acesso ao evento.</li>
+                        </ul>
+                        <a href="pagamento.html?tipo=pesadelo" class="mt-auto bg-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-500 transition-colors">Comprar Agora</a>
+                    </div>
+
+                    <!-- Opção 2: Combo (Destaque) -->
+                    <div class="border-2 border-purple-500 bg-gray-900/70 backdrop-blur-sm rounded-xl p-8 flex flex-col relative border-glow-purple transform scale-105 animate-on-scroll delay-1">
+                        <span class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-sm font-bold px-4 py-1 rounded-full uppercase">Mais Popular</span>
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-purple-300">Combo Pesadelo</h3>
+                        <p class="text-5xl font-bold my-4">R$40</p>
+                        <ul class="text-left text-gray-300 space-y-2 mb-8 flex-grow">
+                            <li class="flex items-start"><span class="text-purple-400 mr-2">✓</span> Acesso ao evento.</li>
+                            <li class="flex items-start"><span class="text-purple-400 mr-2">✓</span> 1 Copo Temático Exclusivo.</li>
+                        </ul>
+                        <a href="pagamento.html?tipo=promo" class="mt-auto bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-500 transition-colors">Quero o Combo!</a>
+                    </div>
+
+                    <!-- Opção 3: Apenas o Copo -->
+                    <div class="border-2 border-orange-800 bg-gray-900/70 backdrop-blur-sm rounded-xl p-8 flex flex-col relative animate-on-scroll delay-2">
+                        <h3 class="text-2xl font-bold uppercase font-creepster tracking-wider text-orange-400">Copo Temático</h3>
+                        <p class="text-5xl font-bold my-4">R$10</p>
+                        <ul class="text-left text-gray-300 space-y-2 mb-8 flex-grow">
+                           <li class="flex items-start"><span class="text-orange-500 mr-2">✓</span> Leve uma lembrança sombria para casa.</li>
+                           <li class="flex items-start text-sm text-gray-400"><span class="text-orange-500 mr-2">!</span> Não inclui entrada no evento.</li>
+                        </ul>
+                        <a href="pagamento.html?tipo=copo" class="mt-auto bg-orange-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-500 transition-colors">Comprar Copo</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900/70 backdrop-blur-sm py-8 border-t-2 border-t-orange-800">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p class="font-creepster text-3xl text-orange-500 text-shadow-orange mb-4">Entre Sonhos e Pesadelos</p>
+            <p>&copy; 2025 Sud Fantasy. </p>
+        </div>
+    </footer>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8jinWD-sDg76cfcc1NrlS8wqeab7ktVGtrhWAv5Yap6K6E10NgmOfm95tH9lsws5J/exec'; 
-        
-        // --- PREÇOS ATUALIZADOS ---
-        const ticketTypes = {
-            'promo': { name: 'Promo Casadinha', price: 60, promo: true }, // Preço fixo para 2 ingressos
-            'pesadelo': { name: 'Passe Pesadelo', price: 40, promo: false },
-            'default': { name: 'Passe Pesadelo', price: 40, promo: false } // Padrão é o ingresso individual
-        };
-
-        const form = document.getElementById('payment-form');
-        const attendeesContainer = document.getElementById('attendees-container');
-        const ticketNameEl = document.getElementById('ticket-name');
-        const totalPriceEl = document.getElementById('total-price');
-        const quantityInput = document.getElementById('quantidade');
-        
-        let currentTicket = {};
-        let currentTotal = 0;
-
-        function updatePrice() {
-            let quantity = parseInt(quantityInput.value) || 1;
-            
-            // Lógica da promoção
-            if (currentTicket.promo) {
-                quantity = 2; // Trava a quantidade em 2
-                quantityInput.value = 2;
-                quantityInput.disabled = true; // Desativa o campo de quantidade
-                currentTotal = currentTicket.price; // Preço fixo da promoção
-            } else {
-                quantityInput.disabled = false; // Garante que o campo está ativo para outros ingressos
-                currentTotal = quantity * currentTicket.price; // Cálculo normal
-            }
-            
-            totalPriceEl.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
-            generateAttendeeForms(quantity);
-        }
-
-        function generateAttendeeForms(quantity) {
-            attendeesContainer.innerHTML = ''; // Limpa os formulários existentes
-            for (let i = 1; i <= quantity; i++) {
-                const isFirst = i === 1;
-                const title = isFirst ? 'Comprador Principal' : `Convidado ${i}`;
-                const attendeeHTML = `
-                    <div class="p-4 border border-gray-700 rounded-lg">
-                        <h3 class="font-bold text-lg mb-4 text-orange-400">${title}</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label for="nome-${i}" class="block text-sm font-medium text-gray-300 mb-1">Nome</label>
-                                <input type="text" id="nome-${i}" name="nome-${i}" class="form-input w-full p-3 rounded-md" required>
-                            </div>
-                            ${isFirst ? `
-                            <div>
-                                <label for="email-${i}" class="block text-sm font-medium text-gray-300 mb-1">E-mail de Contato</label>
-                                <input type="email" id="email-${i}" name="email-${i}" class="form-input w-full p-3 rounded-md" required>
-                            </div>
-                            ` : ''}
-                            <div>
-                                <label for="telefone-${i}" class="block text-sm font-medium text-gray-300 mb-1">Telefone (WhatsApp)</label>
-                                <input type="tel" id="telefone-${i}" name="telefone-${i}" class="form-input w-full p-3 rounded-md" placeholder="(XX) XXXXX-XXXX" required maxlength="15">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-300 mb-2">Você é membro da igreja ou visitante?</label>
-                                <div class="flex gap-x-6">
-                                    <div class="flex items-center">
-                                        <input id="membro-${i}" name="tipo_participante-${i}" type="radio" value="Membro" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" required>
-                                        <label for="membro-${i}" class="ml-3 block text-sm font-medium text-gray-200">Membro</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="visitante-${i}" name="tipo_participante-${i}" type="radio" value="Visitante" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
-                                        <label for="visitante-${i}" class="ml-3 block text-sm font-medium text-gray-200">Visitante</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="membro-info-${i}" class="hidden space-y-4 mt-4">
-                                <div>
-                                    <label for="ala-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Ala</label>
-                                    <input type="text" id="ala-${i}" name="ala-${i}" class="form-input w-full p-3 rounded-md">
-                                </div>
-                                <div>
-                                    <label for="estaca-${i}" class="block text-sm font-medium text-gray-300 mb-1">Sua Estaca</label>
-                                    <input type="text" id="estaca-${i}" name="estaca-${i}" class="form-input w-full p-3 rounded-md">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                attendeesContainer.insertAdjacentHTML('beforeend', attendeeHTML);
-            }
-            addDynamicEventListeners();
-        }
-
-        function addDynamicEventListeners() {
-            const quantity = parseInt(quantityInput.value) || 1;
-            for (let i = 1; i <= quantity; i++) {
-                document.getElementById(`telefone-${i}`).addEventListener('input', (e) => {
-                    let value = e.target.value.replace(/\D/g, '');
-                    value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
-                    value = value.replace(/(\d)(\d{4})$/, '$1-$2');
-                    e.target.value = value;
-                });
-
-                const membroRadio = document.getElementById(`membro-${i}`);
-                const visitanteRadio = document.getElementById(`visitante-${i}`);
-                const membroInfoDiv = document.getElementById(`membro-info-${i}`);
-                const alaInput = document.getElementById(`ala-${i}`);
-                const estacaInput = document.getElementById(`estaca-${i}`);
-
-                membroRadio.addEventListener('change', () => {
-                    membroInfoDiv.classList.remove('hidden');
-                    alaInput.required = true;
-                    estacaInput.required = true;
-                });
-
-                visitanteRadio.addEventListener('change', () => {
-                    membroInfoDiv.classList.add('hidden');
-                    alaInput.required = false;
-                    estacaInput.required = false;
-                    alaInput.value = '';
-                    estacaInput.value = '';
-                });
-            }
-        }
-
-        async function sendDataToSheet(attendees) {
-            const payload = { action: 'add_multiple_sales', attendees: attendees };
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                });
-                if (response.ok) {
-                    return { result: 'success' };
-                } else {
-                    const errorText = await response.text();
-                    throw new Error(errorText || 'Erro desconhecido do servidor.');
-                }
-            } catch (error) {
-                console.error("Erro ao enviar para o Google Sheets:", error);
-                return { result: 'error', error: error.toString() };
-            }
-        }
-        
+        /**
+         * Script para o efeito de partículas no header
+         */
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const ticketKey = params.get('tipo') || 'default';
-            currentTicket = ticketTypes[ticketKey];
-            ticketNameEl.textContent = currentTicket.name;
-            updatePrice();
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+
+            // Define a partícula
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = Math.random() > 0.1 ? 'rgba(249, 115, 22, 0.5)' : 'rgba(192, 132, 252, 0.5)'; // Laranja com um pouco de roxo
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    if (this.size > 0.2) this.size -= 0.01;
+                    
+                    // Resetar partícula se sair da tela ou ficar muito pequena
+                    if (this.size <= 0.2 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = Math.random() * 2 + 1;
+                        this.speedX = Math.random() * 1 - 0.5;
+                        this.speedY = Math.random() * 1 - 0.5;
+                    }
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const numberOfParticles = Math.floor(canvas.width / 20);
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animateParticles);
+            }
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
+
+            resizeCanvas();
+            initParticles();
+            animateParticles();
         });
 
-        quantityInput.addEventListener('input', updatePrice);
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-            
-            const submitButton = document.getElementById('submit-button');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Registrando...';
-
-            const formData = new FormData(form);
-            const attendees = [];
-            const quantity = parseInt(quantityInput.value) || 1;
-            const buyerEmail = formData.get('email-1');
-
-            for (let i = 1; i <= quantity; i++) {
-                attendees.push({
-                    nome: formData.get(`nome-${i}`), 
-                    email: buyerEmail,
-                    telefone: formData.get(`telefone-${i}`),
-                    tipo_participante: formData.get(`tipo_participante-${i}`),
-                    ala: formData.get(`ala-${i}`) || '',
-                    estaca: formData.get(`estaca-${i}`) || '',
-                    ingresso: currentTicket.name,
-                    quantidade: 1
+        /**
+         * Script para animar elementos ao entrarem na tela (scroll)
+         * Usa a API IntersectionObserver para melhor performance.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cria um observador
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Se o elemento está visível na tela
+                    if (entry.isIntersecting) {
+                        // Adiciona a classe que dispara a animação CSS
+                        entry.target.classList.add('is-visible');
+                        // Opcional: para de observar o elemento para não animar novamente
+                        observer.unobserve(entry.target);
+                    }
                 });
-            }
+            }, { 
+                threshold: 0.1 // A animação começa quando 10% do elemento está visível
+            });
 
-            const response = await sendDataToSheet(attendees);
-
-            if (response.result === 'success') {
-                const buyerName = formData.get('nome-1');
-                window.location.href = `comprovante.html?nome=${encodeURIComponent(buyerName)}&total=${currentTotal}`;
-            } else {
-                alert(`Ocorreu um erro: ${response.error || 'Tente novamente.'}`);
-                submitButton.disabled = false;
-                submitButton.textContent = 'Continuar para Pagamento';
-            }
+            // Seleciona todos os elementos que devem ser animados
+            const targets = document.querySelectorAll('.animate-on-scroll');
+            // Pede ao observador para observar cada um deles
+            targets.forEach(target => {
+                observer.observe(target);
+            });
         });
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>

@@ -77,11 +77,12 @@
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8jinWD-sDg76cfcc1NrlS8wqeab7ktVGtrhWAv5Yap6K6E10NgmOfm95tH9lsws5J/exec'; 
         
-        // --- PREÇOS ATUALIZADOS ---
+
         const ticketTypes = {
-            'promo': { name: 'Promo Casadinha', price: 60, promo: true }, // Preço fixo para 2 ingressos
-            'pesadelo': { name: 'Passe Pesadelo', price: 30, promo: false },
-            'default': { name: 'Passe Pesadelo', price: 30, promo: false } // Padrão é o ingresso individual
+            'ingresso': { name: 'Ingresso Sonho', price: 30, requiresAttendeeInfo: true },
+            'copo': { name: 'Copo Temático', price: 15, requiresAttendeeInfo: false },
+            'combo': { name: 'Combo Pesadelo', price: 40, requiresAttendeeInfo: true },
+            'default': { name: 'Ingresso Sonho', price: 30, requiresAttendeeInfo: true } // Padrão
         };
 
         const form = document.getElementById('payment-form');
